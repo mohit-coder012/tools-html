@@ -1,0 +1,2212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ContentSpark — Weekly Content Calendar | VisibilityStack</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #F9FAFB; font-family: 'Manrope', system-ui, sans-serif; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+  button { font-family: inherit; cursor: pointer; }
+  input::placeholder { color: #9ca3af; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(8px) } to { opacity: 1; transform: translateY(0) } }
+  @keyframes spin { from { transform: rotate(0deg) } to { transform: rotate(360deg) } }
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #E5E7EB; border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #D1D5DB; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script id="jsx-source" type="text/plain">
+const { useState, useEffect } = React;
+
+const C = {
+  bg: "#F9FAFB", surface: "#FFFFFF", surfaceLight: "#F4F6F6",
+  border: "#DFE6E7", text: "#171717", textSecondary: "#4E6164", textMuted: "#8C9EA1",
+  primary: "#009294", primaryHover: "#007D7F", primaryDim: "rgba(0,146,148,0.08)",
+  primaryLight: "#00b0b3", primaryGlow: "rgba(0,146,148,0.20)",
+  secondary: "#068485", green: "#00C950", greenDim: "rgba(0,201,80,0.08)",
+  amber: "#F59E0B", amberDim: "rgba(245,158,11,0.08)",
+  red: "#EF4444", redDim: "rgba(239,68,68,0.08)",
+  reddit: "#FF4500", redditDim: "rgba(255,69,0,0.08)",
+  youtube: "#FF0000", youtubeDim: "rgba(255,0,0,0.08)",
+  email: "#6c5ce7", emailDim: "rgba(108,92,231,0.08)",
+  twitter: "#000000", twitterDim: "rgba(0,0,0,0.06)",
+  linkedin: "#0a66c2", linkedinDim: "rgba(10,102,194,0.08)",
+  article: "#7c3aed", articleDim: "rgba(124,58,237,0.08)",
+};
+
+/* ─── Unsplash images (no API key needed) ─── */
+const IMG = {
+  distress1: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=600&h=340&fit=crop",
+  distress2: "https://images.unsplash.com/photo-1582407947092-40bf940be969?w=600&h=340&fit=crop",
+  distress3: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=600&h=340&fit=crop",
+  diligence1: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=600&h=340&fit=crop",
+  diligence2: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=600&h=340&fit=crop",
+  diligence3: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=600&h=340&fit=crop",
+  structure1: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=600&h=340&fit=crop",
+  structure2: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=340&fit=crop",
+  market1: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=600&h=340&fit=crop",
+  market2: "https://images.unsplash.com/photo-1504615755583-2916b52192a3?w=600&h=340&fit=crop",
+  fees: "https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=600&h=340&fit=crop",
+  rates: "https://images.unsplash.com/photo-1535320903710-d993d3d77d29?w=600&h=340&fit=crop",
+  ppm: "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=600&h=340&fit=crop",
+};
+
+/* ─── REPORT DATA ─── */
+const PLAN = {
+  topic: "Real Estate Syndication, Content Marketing",
+  week: "Feb 2026",
+  researchHoursSaved: "10",
+  sourcesScanned: 147,
+
+  brief: {
+    angle: "Capital calls from 2023-vintage deals are accelerating and most LPs have no playbook for responding",
+    audience: "Accredited investors and LPs actively in syndication deals, plus syndication-curious professionals evaluating their first deal",
+    tone: "Direct and experienced. Practitioner sharing hard-won lessons, not guru selling courses",
+    goal: "Build trust as the go-to voice during the syndication shakeout. Drive newsletter signups and consultation bookings",
+  },
+
+  hotTopics: [
+    { topic: "Capital calls from 2023-vintage deals are accelerating", signal: "X threads on capital calls from @MultifamilyMike and @SyndicationPro got 400+ reposts in 2 weeks. YouTube walkthrough by Ken McElroy on 'what to do when you get the call' hit 85K views.", tag: "TRENDING", tagColor: C.red, parent: ["Real Estate Syndication"], sources: [{ title: "@MultifamilyMike on X", url: "https://x.com/MultifamilyMike/status/capital-calls" }, { title: "Ken McElroy — YouTube", url: "https://youtube.com/watch?v=capital-call-guide" }] },
+    { topic: "Sponsor blowups are eroding LP trust across the board", signal: "White Coat Investor's LinkedIn post on losing $100K got 2,200+ reactions. Multiple X threads naming failed sponsors going viral with 500+ replies each.", tag: "HIGH VOLUME", tagColor: C.red, parent: ["Real Estate Syndication"], sources: [{ title: "White Coat Investor — LinkedIn", url: "https://linkedin.com/posts/whitecoatinvestor-syndication-loss" }, { title: "@SyndicationAttorney on X", url: "https://x.com/SyndicationAtty/status/sponsor-failures" }, { title: "BP Podcast Clip — YouTube", url: "https://youtube.com/watch?v=sponsor-blowups-2025" }] },
+    { topic: "\u2018Are syndications dead?\u2019 is the #1 searched question", signal: "BiggerPockets YouTube video titled 'Are Syndications Dead?' hit 120K views in 3 weeks. X poll by @theRealEstateGuy got 4,800 votes — 62% said 'yes, for now.'", tag: "SEO OPPORTUNITY", tagColor: C.primary, parent: ["Real Estate Syndication"], sources: [{ title: "BiggerPockets — YouTube", url: "https://youtube.com/watch?v=syndications-dead" }, { title: "@theRealEstateGuy poll on X", url: "https://x.com/theRealEstateGuy/status/syndication-poll" }] },
+    { topic: "Multifamily prices down 30-40% \u2014 smart money re-entering", signal: "BAM Capital's LinkedIn post on 'why we're buying again' got 1,800 reactions. CRE Daily YouTube breakdown of Q1 pricing data trending at 45K views.", tag: "EMERGING", tagColor: C.amber, parent: ["Real Estate Syndication"], sources: [{ title: "BAM Capital — LinkedIn", url: "https://linkedin.com/posts/bamcapital-buying-again" }, { title: "CRE Daily — YouTube", url: "https://youtube.com/watch?v=multifamily-pricing-2026" }] },
+    { topic: "Fee misalignment is the new hot-button issue", signal: "X thread by @reaboreal breaking down a real deal's fee stack got 1,200 reposts. LinkedIn debate in comments of a Cardone Capital post hit 600+ replies.", tag: "UNDERSERVED", tagColor: C.primary, parent: ["Real Estate Syndication"], sources: [{ title: "@reaboreal on X", url: "https://x.com/reaboreal/status/fee-alignment" }, { title: "Fee debate — LinkedIn", url: "https://linkedin.com/posts/syndication-fee-debate" }] },
+    { topic: "AI-generated content flooding SERPs \u2014 quality bar rising", signal: "Lily Ray's X thread on Google's March update got 3,500 reposts. Kevin Indig's YouTube deep-dive on 'AI content wipeout' hit 92K views in 10 days.", tag: "TRENDING", tagColor: C.red, parent: ["Content Marketing"], sources: [{ title: "@liaboreal on X", url: "https://x.com/lilyraynyc/status/march-update" }, { title: "Kevin Indig — YouTube", url: "https://youtube.com/watch?v=ai-content-wipeout" }, { title: "Ross Simmonds — LinkedIn", url: "https://linkedin.com/posts/rosssimmonds-ai-content" }] },
+    { topic: "Short-form video outperforming blogs for top-of-funnel", signal: "HubSpot's LinkedIn carousel on '3x engagement from Shorts vs blogs' got 4,100 reactions. Multiple X threads from B2B marketers sharing similar data.", tag: "EMERGING", tagColor: C.amber, parent: ["Content Marketing"], sources: [{ title: "HubSpot — LinkedIn", url: "https://linkedin.com/posts/hubspot-shorts-vs-blogs" }, { title: "@aaboreal on X", url: "https://x.com/amandanat/status/shortform-b2b" }] },
+    { topic: "Content repurposing workflows becoming a must-have", signal: "Justin Welsh's LinkedIn post on his repurposing system got 8,500 reactions. X thread by @dickiebush on 'create once, distribute 10x' hit 2,000 reposts.", tag: "HIGH VOLUME", tagColor: C.red, parent: ["Content Marketing"], sources: [{ title: "Justin Welsh — LinkedIn", url: "https://linkedin.com/posts/justinwelsh-repurpose-system" }, { title: "@dickiebush on X", url: "https://x.com/dickiebush/status/repurpose-workflow" }, { title: "Ali Abdaal — YouTube", url: "https://youtube.com/watch?v=content-repurposing-system" }] },
+    { topic: "Zero-click search killing organic traffic strategies", signal: "Rand Fishkin's X thread on '65% of searches = zero clicks' got 5,200 reposts. His YouTube explainer hit 110K views. LinkedIn debates on 'is SEO dead?' trending.", tag: "UNDERSERVED", tagColor: C.primary, parent: ["Content Marketing"], sources: [{ title: "@randfish on X", url: "https://x.com/randfish/status/zero-click" }, { title: "Rand Fishkin — YouTube", url: "https://youtube.com/watch?v=zero-click-data" }] },
+    { topic: "1031 exchange into syndications gaining traction", signal: "YouTube video by @1031taxguy on 'How to 1031 into a syndication' hit 67K views. X thread by @CostSegAuthority breaking down the tax math got 800 reposts.", tag: "SEO OPPORTUNITY", tagColor: C.primary, parent: ["Real Estate Syndication"], sources: [{ title: "@1031taxguy — YouTube", url: "https://youtube.com/watch?v=1031-syndication" }, { title: "@CostSegAuthority on X", url: "https://x.com/CostSegAuthority/status/1031-math" }, { title: "Tax Strategy LinkedIn post", url: "https://linkedin.com/posts/1031-syndication-guide" }] },
+  ],
+
+  x: [
+    { id: 1, text: "Your syndicator made $1.5M before you got a single dollar back.\n\nHere\u2019s how the fee stack actually works in a real estate syndication:", hook: "Fee transparency expos\u00e9", img: IMG.fees, hashtags: "#realestate #syndication #investing",
+      repurpose: [
+        { channel: "LinkedIn", icon: "in", color: "#0a66c2", bg: "rgba(10,102,194,0.08)", piece: "Post: Condense the fee breakdown into a punchy 200-word take with the $1.5M stat as the hook", effort: "20 min", note: "write + format" },
+        { channel: "Email", icon: "\u2709", color: "#6c5ce7", bg: "rgba(108,92,231,0.08)", piece: "Newsletter: 'What nobody tells you about syndication fees' — walk through one deal's actual fee stack as a standalone deep-dive", effort: "25 min", note: "draft + edit + format" },
+        { channel: "YouTube", icon: "\u25b6", color: "#FF0000", bg: "rgba(255,0,0,0.08)", piece: "Short: 60-sec whiteboard breakdown of how fees flow before LPs see a dollar", effort: "45 min", note: "script + record + edit" },
+      ],
+    },
+    { id: 2, text: "Got a capital call letter?\n\nDon\u2019t panic. Here are 5 questions to ask before you send more money:", hook: "Capital call decision framework", img: IMG.distress2, hashtags: "#realestate #syndication #capitalcall",
+      repurpose: [
+        { channel: "LinkedIn", icon: "in", color: "#0a66c2", bg: "rgba(10,102,194,0.08)", piece: "Carousel: '5 questions before you answer a capital call' — one question per slide with red/green flag indicators", effort: "1.5 hr", note: "write slides + design + export" },
+        { channel: "Email", icon: "\u2709", color: "#6c5ce7", bg: "rgba(108,92,231,0.08)", piece: "Newsletter: 'I just got a capital call letter. Here's exactly what I did next' — first-person walkthrough of the decision process", effort: "30 min", note: "draft + edit + format" },
+      ],
+    },
+    { id: 3, text: "\u201cAre syndications dead?\u201d\n\nNo. Lazy syndications are.\n\nHere\u2019s the difference:", hook: "Contrarian hot take", img: IMG.distress3, hashtags: "#realestate #multifamily #investing",
+      repurpose: [
+        { channel: "LinkedIn", icon: "in", color: "#0a66c2", bg: "rgba(10,102,194,0.08)", piece: "Post: Expand into a 300-word take — 'The syndication model isn't broken, the operators were'", effort: "20 min", note: "write + format" },
+        { channel: "YouTube", icon: "\u25b6", color: "#FF0000", bg: "rgba(255,0,0,0.08)", piece: "Short: Hot take to camera — 60 sec on what separates lazy syndications from disciplined ones", effort: "35 min", note: "script + record + edit" },
+        { channel: "Email", icon: "\u2709", color: "#6c5ce7", bg: "rgba(108,92,231,0.08)", piece: "Newsletter: 'The 3 things that killed most 2023-vintage deals' — turn the contrarian take into a diagnostic checklist", effort: "25 min", note: "draft + edit + format" },
+      ],
+    },
+    { id: 4, text: "I\u2019ve reviewed 50+ syndication deals.\n\nHere are the 7 questions that saved me from 3 bad ones:", hook: "Due diligence checklist", img: IMG.diligence1, hashtags: "#duediligence #realestate #syndication",
+      repurpose: [
+        { channel: "LinkedIn", icon: "in", color: "#0a66c2", bg: "rgba(10,102,194,0.08)", piece: "Carousel: '7 questions that saved me from bad syndication deals' — one question per slide with what-to-look-for context", effort: "1.5 hr", note: "write slides + design + export" },
+        { channel: "YouTube", icon: "\u25b6", color: "#FF0000", bg: "rgba(255,0,0,0.08)", piece: "Short: Rapid-fire 60-sec video listing all 7 questions with on-screen text", effort: "40 min", note: "script + record + edit" },
+      ],
+    },
+    { id: 5, text: "The #1 red flag in any syndication PPM:\n\nThe sponsor takes a 2% acquisition fee with zero co-invest.\n\nHere\u2019s why that should kill the deal:", hook: "PPM red flag spotlight", img: IMG.ppm, hashtags: "#investing #realestate #ppm",
+      repurpose: [
+        { channel: "LinkedIn", icon: "in", color: "#0a66c2", bg: "rgba(10,102,194,0.08)", piece: "Post: 'One line in the PPM tells you everything' — 250-word breakdown of why zero co-invest is a dealbreaker", effort: "20 min", note: "write + format" },
+        { channel: "Email", icon: "\u2709", color: "#6c5ce7", bg: "rgba(108,92,231,0.08)", piece: "Newsletter: 'How to read a PPM in 15 minutes' — the 5 sections that matter and what each reveals about the sponsor", effort: "30 min", note: "draft + edit + format" },
+        { channel: "Instagram", icon: "ig", color: "#E1306C", bg: "rgba(225,48,108,0.08)", piece: "Carousel: 'PPM Red Flags Cheat Sheet' — visual guide with green check vs red flag per item", effort: "1.5 hr", note: "write slides + design + export" },
+      ],
+    },
+    { id: 6, text: "Everyone\u2019s chasing new syndication deals.\n\nMeanwhile, the best investors I know are buying LP positions secondhand at 40-60\u00a2 on the dollar.\n\nThe secondary market is the 2026 opportunity nobody\u2019s talking about.", hook: "Secondary market opportunity", img: IMG.distress2, hashtags: "#syndication #investing #realestate",
+      repurpose: [
+        { channel: "LinkedIn", icon: "in", color: "#0a66c2", bg: "rgba(10,102,194,0.08)", piece: "Post: 'How to buy syndication positions at 50\u00a2 on the dollar' — step-by-step breakdown of secondary LP transfers", effort: "25 min", note: "write + format" },
+        { channel: "Email", icon: "\u2709", color: "#6c5ce7", bg: "rgba(108,92,231,0.08)", piece: "Newsletter: 'The syndication secondary market explained' — what it is, how to find deals, and the risks nobody mentions", effort: "30 min", note: "draft + edit + format" },
+      ],
+    },
+  ],
+
+  linkedin: [
+    {
+      id: 1,
+      title: "The Real Estate Syndication Reckoning: What Actually Went Wrong",
+      hook: "Investors lost millions in 2024-2025. Forums are full of horror stories. But nobody has written the balanced post-mortem. Until now.",
+      body: "After reviewing dozens of failed deals, the pattern is clear:\n\n\u2192 Floating-rate debt with no rate caps\n\u2192 Aggressive rent growth projections (5-7% annually)\n\u2192 Inexperienced operators doing their first 200+ unit deal\n\u2192 Zero sponsor co-invest (no skin in the game)\n\nThe real tragedy: every one of these red flags was visible in the PPM before investors wrote a check.\n\nThe industry isn\u2019t dead. But the bar for sponsors just got 10x higher.\n\n3 things every LP should demand going forward:\n1. Fixed-rate debt or fully hedged floating\n2. Minimum 10% sponsor co-invest\n3. Conservative underwriting (3% rent growth max)\n\nThe investors who learn from this cycle will outperform. The ones who swear off syndications entirely will miss the buying opportunity of the decade.",
+      cta: "What\u2019s one red flag you wish you\u2019d caught earlier? Drop it below.",
+      img: IMG.distress1,
+      format: "Thought leadership post",
+      repurpose: [
+        { channel: "X Thread", icon: "\ud835\udd4f", color: "#000", bg: "rgba(0,0,0,0.06)", piece: "Break the 4 red flags into a 6-tweet thread — one flag per tweet with the $100K loss stat as the hook", effort: "30 min", note: "write + format" },
+        { channel: "Email", icon: "\u2709", color: "#6c5ce7", bg: "rgba(108,92,231,0.08)", piece: "Newsletter: 'The 4 patterns behind every failed syndication deal' — standalone deep-dive with the 3 LP demands as CTA", effort: "25 min", note: "draft + edit + format" },
+        { channel: "YouTube", icon: "\u25b6", color: "#FF0000", bg: "rgba(255,0,0,0.08)", piece: "Short: 60-sec 'post-mortem in 60 seconds' — rapid-fire the 4 failure patterns with text overlays", effort: "45 min", note: "script + record + edit" },
+        { channel: "Instagram", icon: "ig", color: "#E1306C", bg: "rgba(225,48,108,0.08)", piece: "Carousel: '4 Red Flags That Killed Syndication Deals' — one flag per slide with icons, 3 demands as final slide", effort: "1.5 hr", note: "write slides + design + export" },
+      ],
+    },
+    {
+      id: 2,
+      title: "The Sponsor Vetting Checklist Nobody Gives You",
+      hook: "Everyone says \u2018vet your sponsor.\u2019 Nobody tells you HOW. Here are the 15 questions I ask before writing any check.",
+      body: "After watching multiple syndications implode, I built a vetting framework:\n\nTRACK RECORD (questions 1-4)\n\u2192 How many full-cycle deals have you completed?\n\u2192 What happened to your deals in 2023-2024?\n\u2192 Can I speak with LPs from your last 3 deals?\n\u2192 Show me your actual vs. projected returns\n\nSKIN IN THE GAME (questions 5-8)\n\u2192 How much of your own capital is in this deal?\n\u2192 Do you take acquisition fees? Asset management fees?\n\u2192 What happens to your fees if the deal underperforms?\n\u2192 Is your promote tied to a preferred return hurdle?\n\nDEAL STRUCTURE (questions 9-12)\n\u2192 Fixed or floating rate? If floating, what\u2019s the cap?\n\u2192 What are your rent growth assumptions?\n\u2192 What\u2019s the exit cap rate vs. entry?\n\u2192 How much in reserves?\n\nCOMMUNICATION (questions 13-15)\n\u2192 How often do you send investor updates?\n\u2192 Can I see a sample quarterly report?\n\u2192 What\u2019s your protocol if something goes wrong?",
+      cta: "Save this. You\u2019ll thank yourself on the next deal.",
+      img: IMG.diligence2,
+      format: "Actionable checklist",
+      repurpose: [
+        { channel: "X Thread", icon: "\ud835\udd4f", color: "#000", bg: "rgba(0,0,0,0.06)", piece: "15 questions in 15 tweets — one question per tweet grouped by the 4 categories, with the 'why it matters' for each", effort: "35 min", note: "write + format" },
+        { channel: "Email", icon: "\u2709", color: "#6c5ce7", bg: "rgba(108,92,231,0.08)", piece: "Newsletter: 'The sponsor vetting scorecard' — turn the 15 questions into a printable checklist with scoring rubric", effort: "30 min", note: "draft + design + format" },
+        { channel: "YouTube", icon: "\u25b6", color: "#FF0000", bg: "rgba(255,0,0,0.08)", piece: "Short: 'The one question that kills bad deals' — pick the single most important question from each category, 60 sec", effort: "40 min", note: "script + record + edit" },
+      ],
+    },
+  ],
+
+  articles: [
+    {
+      id: 1,
+      title: "The Complete Guide to Real Estate Syndication Due Diligence in 2026",
+      subtitle: "Everything investors need to know after the 2024-2025 reckoning",
+      outline: [
+        "Why due diligence matters more now than ever (the losses, the trust erosion, the opportunity)",
+        "The Sponsor Vetting Framework: 15 questions across 4 categories with scoring rubric",
+        "How to Read a PPM Without a Law Degree: the 5 sections that matter, what to look for, red flags",
+        "Deal Structure Economics: preferred returns, waterfalls, fee alignment, what \u2018good\u2019 looks like",
+        "The 2026 Market Landscape: top 5 metros, interest rate playbook, fixed vs. floating",
+        "Case Study: A deal that worked vs. a deal that imploded \u2014 side-by-side comparison",
+        "The Decision Framework: when to invest, when to walk, and when to run",
+      ],
+      wordCount: "3,500-4,000",
+      img: IMG.diligence3,
+      seoKeywords: "real estate syndication due diligence, syndication investing 2026, how to vet syndication sponsors",
+      repurpose: [
+        { channel: "LinkedIn", icon: "in", color: "#0a66c2", bg: "rgba(10,102,194,0.08)", piece: "Post: Pull the '15-question vetting framework' section into a standalone post — 'Save this before your next syndication investment'", effort: "20 min", note: "write + format" },
+        { channel: "Email", icon: "\u2709", color: "#6c5ce7", bg: "rgba(108,92,231,0.08)", piece: "3-part drip series: (1) Why DD matters now, (2) The 15-question framework as printable checklist, (3) Case study — deal that worked vs. imploded", effort: "1.5 hr", note: "draft 3 emails + format" },
+        { channel: "YouTube", icon: "\u25b6", color: "#FF0000", bg: "rgba(255,0,0,0.08)", piece: "Video: 10-min walkthrough 'How I evaluate a syndication deal in 2026' — screen share the framework with a real deal example", effort: "2 hr", note: "script + record + edit" },
+        { channel: "X Thread", icon: "\ud835\udd4f", color: "#000", bg: "rgba(0,0,0,0.06)", piece: "7 sections in 7 tweets — one key takeaway per tweet covering the full article arc from losses to opportunity", effort: "25 min", note: "write + format" },
+      ],
+    },
+  ],
+};
+
+/* ─── API CONFIG ─── */
+const API_BASE = "https://tools.visibilitystack.com/api/v1";
+
+const api = {
+  createJob: async (topics, email, frequency = 1) => {
+    const r = await fetch(`${API_BASE}/content_spark/`, {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ topics, email, frequency: Math.min(2, Math.max(1, Number(frequency) || 1)) }),
+    });
+    if (!r.ok) {
+      const err = await r.json().catch(() => null);
+      const msg = err?.detail?.message || err?.detail || "Failed to create job.";
+      throw new Error(msg);
+    }
+    const d = await r.json();
+    return d.data.data.job_id;
+  },
+  getAngles: async (jobId) => {
+    const r = await fetch(`${API_BASE}/content_spark/result/${jobId}`, { headers: { accept: "application/json" } });
+    if (!r.ok) throw new Error("Failed to get angles");
+    return (await r.json()).data;
+  },
+  processAngles: async (jobId, angleIds, tone) => {
+    const r = await fetch(`${API_BASE}/content_spark/process_angles`, {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ job_id: jobId, angle_ids: angleIds, tone }),
+    });
+    if (!r.ok) throw new Error("Failed to start post generation");
+    return await r.json();
+  },
+};
+
+/* ─── DATA MAPPERS ─── */
+const mapXPost = (p) => ({ id: p.id, text: p.content, hashtags: "", orderIndex: p.order_index });
+
+const mapLinkedinPost = (p) => {
+  const content = p.content || "";
+  const paras = content.split("\n\n").filter(s => s.trim());
+  const hook = paras[0] || "";
+  const cta = paras.length > 1 ? paras[paras.length - 1] : "";
+  const body = paras.length > 2 ? paras.slice(1, -1).join("\n\n") : "";
+  return { id: p.id, title: "LinkedIn Post", hook, body, cta, format: "AI Generated" };
+};
+
+/* ─── SHARED COMPONENTS ─── */
+
+const VSLogoMark = ({ size = 36 }) => (
+  <div style={{ width: size, height: size, background: C.primary, borderRadius: size * 0.162, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+    <svg width={size * 0.72} height={size * 0.72} viewBox="0 0 20 20" fill="none">
+      <path d="M19.5 0L19.46 0.17L19.1 1.8L18.63 3.87L17.53 2.47L10.7 5.62L17.01 11.11L15.09 19.59L0 6.35L3.01 5.4L13.62 14.68L14.27 12.41L5.55 4.59L15.88 1.32L16.53 1.12L15.66 0H19.5Z" fill="white"/>
+    </svg>
+  </div>
+);
+
+const NavLink = ({ label, hasDropdown }) => (
+  <span style={{ display: "inline-flex", alignItems: "center", gap: 3, fontSize: 14, fontWeight: 500, color: "#374151", cursor: "pointer", padding: "6px 0", transition: "color 0.15s" }}
+    onMouseEnter={e => e.currentTarget.style.color = C.primary}
+    onMouseLeave={e => e.currentTarget.style.color = "#374151"}>
+    {label}
+    {hasDropdown && <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"/></svg>}
+  </span>
+);
+
+/* ─── LANDING SCREEN ─── */
+const MAX_TOPICS = 2;
+const MAX_FREQUENCY = 2;
+
+const LandingScreen = ({ topics, setTopics, email, setEmail, frequency, setFrequency, onSubmit, loading, error }) => {
+  const [focused, setFocused] = useState(null);
+  const [topicInput, setTopicInput] = useState("");
+
+  const addTopicsFromText = (rawText) => {
+    if (!rawText || topics.length >= MAX_TOPICS) return false;
+    const parts = rawText
+      .split(",")
+      .map((t) => t.trim())
+      .filter(Boolean);
+    if (parts.length === 0) return false;
+
+    const next = [...topics];
+    parts.forEach((part) => {
+      if (next.length < MAX_TOPICS && !next.includes(part)) {
+        next.push(part);
+      }
+    });
+
+    if (next.length !== topics.length) {
+      setTopics(next);
+      return true;
+    }
+    return false;
+  };
+
+  const removeTopic = (idx) => setTopics(topics.filter((_, i) => i !== idx));
+
+  const handleSubmit = () => {
+    let finalTopics = topics;
+    const pending = topicInput.trim();
+    if (pending && topics.length < MAX_TOPICS) {
+      const pendingParts = pending
+        .split(",")
+        .map((t) => t.trim())
+        .filter(Boolean);
+      if (pendingParts.length > 0) {
+        const merged = [...topics];
+        pendingParts.forEach((part) => {
+          if (merged.length < MAX_TOPICS && !merged.includes(part)) {
+            merged.push(part);
+          }
+        });
+        finalTopics = merged;
+        if (merged.length !== topics.length) {
+          setTopics(merged);
+        }
+      }
+    }
+    if (finalTopics.length === 0 || !email.trim()) return;
+    const freq = Math.min(MAX_FREQUENCY, Math.max(1, Number(frequency) || 1));
+    onSubmit(finalTopics, email.trim(), freq);
+  };
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "56px 20px 64px", minHeight: "85vh", position: "relative" }}>
+      <div style={{ position: "absolute", top: -120, left: "50%", transform: "translateX(-50%)", width: 800, height: 400, background: "radial-gradient(ellipse, rgba(0,146,148,0.06) 0%, rgba(0,109,111,0.03) 40%, transparent 70%)", pointerEvents: "none" }} />
+
+      <h1 style={{ fontSize: "clamp(34px, 5vw, 52px)", fontWeight: 800, lineHeight: 1.1, margin: "0 0 22px", fontFamily: "'Manrope', sans-serif", color: C.text, maxWidth: 680, textAlign: "center", position: "relative" }}>
+        Stop guessing{" "}
+        <span style={{ background: "linear-gradient(135deg, " + C.primary + " 0%, " + C.primaryLight + " 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>what to create</span>
+        {" "}this week
+      </h1>
+
+      <p style={{ fontSize: 18, color: C.textMuted, maxWidth: 520, margin: "0 0 44px", lineHeight: 1.65, textAlign: "center", position: "relative" }}>
+        ChatGPT gives you generic topic ideas. We scan what's actually performing across social, search & communities, surface top angles worth posting about, and write the posts for the one you pick. Weekly content calendar, done.
+      </p>
+
+      <div style={{ width: "100%", maxWidth: 480, position: "relative" }}>
+
+        {/* Topic tag input */}
+        <div style={{ marginBottom: 14 }}>
+          <label style={{ display: "flex", alignItems: "center", justifyContent: "space-between", fontSize: 12, color: C.textMuted, marginBottom: 7, fontWeight: 600 }}>
+            <span>Topics <span style={{ fontWeight: 400, opacity: 0.6 }}>(up to {MAX_TOPICS})</span></span>
+            <span style={{ fontSize: 11, color: topics.length >= MAX_TOPICS ? C.red : C.textMuted }}>{topics.length}/{MAX_TOPICS}</span>
+          </label>
+
+          {/* Tags */}
+          {topics.length > 0 && (
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 8 }}>
+              {topics.map((t, i) => (
+                <div key={i} style={{ display: "inline-flex", alignItems: "center", gap: 5, padding: "5px 10px", background: C.primaryDim, border: "1px solid rgba(0,146,148,0.3)", borderRadius: 20, fontSize: 12, color: C.primary, fontWeight: 600 }}>
+                  {t}
+                  <span onClick={() => removeTopic(i)} style={{ cursor: "pointer", fontSize: 14, lineHeight: 1, color: C.primary, opacity: 0.7, marginLeft: 2 }}>×</span>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Input */}
+          {topics.length < MAX_TOPICS && (
+            <div style={{ display: "flex" }}>
+              <input
+                value={topicInput}
+                onChange={e => setTopicInput(e.target.value)}
+                placeholder={topics.length === 0 ? "e.g. loan management software" : "Add another topic..."}
+                style={{ flex: 1, padding: "12px 14px", background: C.surface, border: "1px solid " + (focused === "topic" ? C.primary : C.border), borderRadius: 10, color: C.text, fontSize: 14, outline: "none", boxSizing: "border-box", transition: "border-color 0.25s, box-shadow 0.25s", boxShadow: focused === "topic" ? "0 0 0 3px " + C.primaryDim : "none", fontFamily: "'Manrope', sans-serif" }}
+                onFocus={() => setFocused("topic")} onBlur={() => setFocused(null)}
+                onKeyDown={e => {
+                  if (e.key === "Enter" || e.key === ",") {
+                    e.preventDefault();
+                    const added = addTopicsFromText(topicInput);
+                    if (added) setTopicInput("");
+                  }
+                }}
+              />
+            </div>
+          )}
+        </div>
+
+        <div style={{ marginBottom: 20 }}>
+          <label style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: C.textMuted, marginBottom: 7, fontWeight: 600 }}>Work Email</label>
+          <input
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+            placeholder="you@company.com"
+            style={{ width: "100%", padding: "14px 16px", background: C.surface, border: "1px solid " + (focused === "email" ? C.primary : C.border), borderRadius: 12, color: C.text, fontSize: 14, outline: "none", boxSizing: "border-box", transition: "border-color 0.25s, box-shadow 0.25s", boxShadow: focused === "email" ? "0 0 0 3px " + C.primaryDim : "none", fontFamily: "'Manrope', sans-serif" }}
+            onFocus={() => setFocused("email")} onBlur={() => setFocused(null)}
+            onKeyDown={e => e.key === "Enter" && handleSubmit()}
+          />
+        </div>
+
+        {error && (
+          <div style={{ marginBottom: 14, padding: "10px 14px", background: C.redDim, border: "1px solid " + C.red, borderRadius: 8, fontSize: 12, color: C.red, fontWeight: 600 }}>
+            {error}
+          </div>
+        )}
+
+        <button
+          onClick={handleSubmit}
+          disabled={loading || topics.length === 0 || !email.trim()}
+          style={{
+            width: "100%", padding: "16px", fontSize: 16, fontWeight: 700, borderRadius: 12,
+            background: loading ? C.border : "linear-gradient(135deg, " + C.primary + ", " + C.primaryLight + ")",
+            color: "#ffffff", border: "none", cursor: loading ? "not-allowed" : "pointer",
+            fontFamily: "'Manrope', sans-serif", boxShadow: loading ? "none" : "0 4px 20px " + C.primaryGlow,
+            transition: "all 0.3s", letterSpacing: 0.3, opacity: (topics.length === 0 || !email.trim()) ? 0.6 : 1,
+          }}
+          onMouseEnter={e => { if (!loading) { e.target.style.transform = "translateY(-2px)"; e.target.style.boxShadow = "0 8px 32px " + C.primaryGlow; }}}
+          onMouseLeave={e => { e.target.style.transform = "translateY(0)"; e.target.style.boxShadow = loading ? "none" : "0 4px 20px " + C.primaryGlow; }}>
+          {loading ? "Starting..." : `Analyze ${topics.length > 1 ? topics.length + " Topics" : "My Topic"} \u2192`}
+        </button>
+      </div>
+    </div>
+  );
+};
+
+/* ─── PROCESSING SCREEN ─── */
+const ProcessingScreen = ({ jobId, onComplete }) => {
+  const [progress, setProgress] = useState(0);
+  const [error, setError] = useState(null);
+  const steps = [
+    { label: "Scanning social for trending posts", status: progress > 15 ? "done" : progress > 3 ? "active" : "pending" },
+    { label: "Pulling top-performing content", status: progress > 35 ? "done" : progress > 15 ? "active" : "pending" },
+    { label: "Mining community discussions", status: progress > 55 ? "done" : progress > 35 ? "active" : "pending" },
+    { label: "Spotting patterns & gaps", status: progress > 78 ? "done" : progress > 55 ? "active" : "pending" },
+    { label: "Building your content plan", status: progress >= 100 ? "done" : progress > 78 ? "active" : "pending" },
+  ];
+
+  // Animate progress bar independently, cap at 95 until API confirms done
+  useEffect(() => {
+    const t = setInterval(() => setProgress(p => p >= 95 ? 95 : p + 0.6), 200);
+    return () => clearInterval(t);
+  }, []);
+
+  // Poll API until COMPLETED
+  useEffect(() => {
+    if (!jobId) return;
+    let cancelled = false;
+    const poll = async () => {
+      try {
+        const data = await api.getAngles(jobId);
+        if (cancelled) return;
+        if (data.status === "COMPLETED" && data.result && data.result.results) {
+          setProgress(100);
+          setTimeout(() => onComplete(data), 600);
+        } else if (data.status === "FAILED") {
+          setError("Job failed. Please try again.");
+        } else {
+          setTimeout(poll, 3000);
+        }
+      } catch (e) {
+        if (!cancelled) setError("Connection error. Retrying...");
+        if (!cancelled) setTimeout(poll, 5000);
+      }
+    };
+    setTimeout(poll, 3000);
+    return () => { cancelled = true; };
+  }, [jobId]);
+
+  return (
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "80vh", padding: 20 }}>
+      <div style={{ background: C.surface, border: "1px solid " + C.border, borderRadius: 20, padding: "40px 36px", width: "100%", maxWidth: 500, textAlign: "center", position: "relative" }}>
+        <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: "linear-gradient(90deg, " + C.primary + ", " + C.primaryLight + ", transparent)", borderRadius: "20px 20px 0 0" }} />
+        <h3 style={{ fontSize: 22, fontWeight: 700, color: C.text, margin: "0 0 6px", fontFamily: "'Manrope', sans-serif" }}>Analyzing your topic...</h3>
+        <p style={{ fontSize: 14, color: C.textMuted, marginBottom: 28 }}>Scanning social, search & communities for real-time signals</p>
+
+        <div style={{ display: "flex", flexDirection: "column", gap: 0, textAlign: "left", marginBottom: 32 }}>
+          {steps.map((s, i) => (
+            <div key={s.label} style={{ display: "flex", alignItems: "flex-start", gap: 14 }}>
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                <div style={{ width: 30, height: 30, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 700, flexShrink: 0, background: s.status === "done" ? C.greenDim : s.status === "active" ? C.primaryDim : C.surfaceLight, color: s.status === "done" ? C.green : s.status === "active" ? C.primary : C.textMuted, border: "2px solid " + (s.status === "done" ? C.green : s.status === "active" ? C.primary : C.border), transition: "all 0.3s ease", boxShadow: s.status === "active" ? "0 0 12px " + C.primary + "33" : "none" }}>
+                  {s.status === "done" ? "\u2713" : s.status === "active" ? (
+                    <span style={{ display: "inline-block", animation: "spin 1s linear infinite", fontSize: 14 }}>{"\u27F3"}</span>
+                  ) : (i + 1)}
+                </div>
+                {i < steps.length - 1 && <div style={{ width: 2, height: 24, background: s.status === "done" ? C.green : C.border, transition: "background 0.3s" }} />}
+              </div>
+              <div style={{ paddingTop: 4 }}>
+                <div style={{ fontSize: 14, fontWeight: 600, color: s.status === "pending" ? C.textMuted : C.text, transition: "color 0.3s" }}>{s.label}</div>
+                <div style={{ fontSize: 11, color: s.status === "done" ? C.green : s.status === "active" ? C.primary : C.textMuted }}>
+                  {s.status === "done" ? "Complete" : s.status === "active" ? "In progress..." : "Waiting"}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div style={{ background: C.surfaceLight, borderRadius: 8, height: 8, overflow: "hidden", marginBottom: 12 }}>
+          <div style={{ width: Math.round(progress) + "%", height: "100%", borderRadius: 8, transition: "width 0.4s", background: "linear-gradient(90deg, " + C.primary + ", " + C.primaryLight + ")" }} />
+        </div>
+        <div style={{ fontSize: 12, color: C.textMuted, fontFamily: "'DM Mono', monospace" }}>{Math.round(progress)}% complete</div>
+
+        {error && (
+          <div style={{ marginTop: 16, padding: "8px 14px", background: C.redDim, border: "1px solid " + C.red, borderRadius: 8, fontSize: 12, color: C.red }}>{error}</div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+/* ─── REPORT COMPONENTS ─── */
+
+const ChannelHeader = ({ icon, label, count, color, colorDim }) => (
+  <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
+    <div style={{ width: 40, height: 40, borderRadius: 10, background: colorDim, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, fontWeight: 700, color: color, flexShrink: 0 }}>{icon}</div>
+    <div>
+      <div style={{ fontSize: 16, fontWeight: 700, color: C.text }}>{label}</div>
+      <div style={{ fontSize: 12, color: C.textMuted }}>{count} pieces ready</div>
+    </div>
+  </div>
+);
+
+const XPostCard = ({ post, index, day, onUpdate }) => {
+  const [copied, setCopied] = useState(false);
+  const [editing, setEditing] = useState(false);
+  const [editText, setEditText] = useState(post.text);
+  const [editTags, setEditTags] = useState(post.hashtags);
+  const fullText = post.text + "\n\n" + post.hashtags;
+  const charCount = fullText.length;
+
+  const handleCopy = (e) => {
+    e.stopPropagation();
+    navigator.clipboard.writeText(fullText);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  };
+
+  const handleSave = () => {
+    onUpdate({ ...post, text: editText, hashtags: editTags });
+    setEditing(false);
+  };
+
+  const handleCancel = () => {
+    setEditText(post.text);
+    setEditTags(post.hashtags);
+    setEditing(false);
+  };
+
+  return (
+    <div style={{ background: C.surface, border: "1px solid " + (editing ? C.primary : C.border), borderRadius: 10, padding: "14px 16px", transition: "border-color 0.2s, box-shadow 0.2s", display: "flex", flexDirection: "column", height: "100%" }}
+      onMouseEnter={e => { if (!editing) { e.currentTarget.style.boxShadow = "0 4px 16px rgba(0,0,0,0.06)"; e.currentTarget.style.borderColor = "rgba(0,0,0,0.12)"; }}}
+      onMouseLeave={e => { if (!editing) { e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.borderColor = C.border; }}}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          <span style={{ fontSize: 10, fontWeight: 700, color: C.twitter, padding: "2px 8px", background: C.twitterDim, borderRadius: 4, fontFamily: "'DM Mono', monospace" }}>{String(index).padStart(2, "0")}</span>
+          {day && <span style={{ fontSize: 9, color: C.textMuted, fontFamily: "'DM Mono', monospace", letterSpacing: 0.5 }}>{day}</span>}
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+          {!editing && (
+            <button onClick={() => setEditing(true)} title="Edit post" style={{
+              padding: "4px 10px", fontSize: 10, fontWeight: 600, borderRadius: 5,
+              background: "transparent", color: C.textMuted, border: "1px solid transparent",
+              cursor: "pointer", transition: "all 0.15s", fontFamily: "'DM Mono', monospace",
+            }}
+              onMouseEnter={e => { e.currentTarget.style.background = C.surfaceLight; e.currentTarget.style.borderColor = C.border; }}
+              onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.borderColor = "transparent"; }}>
+              Edit
+            </button>
+          )}
+          <button onClick={handleCopy} title="Copy post" style={{
+            padding: "4px 10px", fontSize: 10, fontWeight: 600, borderRadius: 5,
+            background: copied ? C.primaryDim : "transparent", color: copied ? C.primary : C.textMuted,
+            border: "1px solid " + (copied ? "rgba(0,146,148,0.3)" : "transparent"), cursor: "pointer",
+            transition: "all 0.15s", fontFamily: "'DM Mono', monospace",
+          }}
+            onMouseEnter={e => { if (!copied) { e.currentTarget.style.background = C.surfaceLight; e.currentTarget.style.borderColor = C.border; }}}
+            onMouseLeave={e => { if (!copied) { e.currentTarget.style.background = "transparent"; e.currentTarget.style.borderColor = "transparent"; }}}>
+            {copied ? "\u2713 Copied" : "Copy"}
+          </button>
+        </div>
+      </div>
+
+      {editing ? (
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 8 }}>
+          <textarea value={editText} onChange={e => setEditText(e.target.value)} style={{
+            width: "100%", fontSize: 13, color: C.text, lineHeight: 1.65, flex: 1, minHeight: 100,
+            background: C.primaryDim, border: "1px solid rgba(0,146,148,0.2)", borderRadius: 6,
+            padding: "8px 10px", resize: "vertical", fontFamily: "'Manrope', sans-serif",
+            outline: "none", boxSizing: "border-box",
+          }} />
+          <input value={editTags} onChange={e => setEditTags(e.target.value)} style={{
+            width: "100%", fontSize: 10, color: C.textMuted, padding: "6px 10px",
+            background: C.bg, border: "1px solid " + C.border, borderRadius: 4,
+            fontFamily: "'DM Mono', monospace", outline: "none", boxSizing: "border-box",
+          }} />
+          <div style={{ display: "flex", gap: 6, justifyContent: "flex-end" }}>
+            <button onClick={handleCancel} style={{ padding: "5px 12px", fontSize: 10, fontWeight: 600, borderRadius: 5, background: "transparent", color: C.textMuted, border: "1px solid " + C.border, cursor: "pointer", fontFamily: "'DM Mono', monospace" }}>Cancel</button>
+            <button onClick={handleSave} style={{ padding: "5px 12px", fontSize: 10, fontWeight: 700, borderRadius: 5, background: C.primary, color: "#fff", border: "none", cursor: "pointer", fontFamily: "'DM Mono', monospace" }}>Save</button>
+          </div>
+        </div>
+      ) : (
+        <>
+          <div style={{ fontSize: 13, color: C.text, lineHeight: 1.65, whiteSpace: "pre-line", flex: 1 }}>{post.text}</div>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 10, paddingTop: 8, borderTop: "1px solid " + C.border }}>
+            <div style={{ fontSize: 10, color: C.textMuted, opacity: 0.7 }}>{post.hashtags}</div>
+            <span style={{ fontSize: 9, color: charCount > 280 ? C.red : C.textMuted, fontFamily: "'DM Mono', monospace" }}>{charCount}/280</span>
+          </div>
+        </>
+      )}
+    </div>
+  );
+};
+
+const LinkedInCard = ({ post, index, day, onUpdate }) => {
+  const [expanded, setExpanded] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const [editing, setEditing] = useState(false);
+  const [editData, setEditData] = useState({ title: post.title, hook: post.hook, body: post.body, cta: post.cta });
+
+  const handleCopy = (e) => {
+    e.stopPropagation();
+    navigator.clipboard.writeText(post.hook + "\n\n" + post.body + "\n\n" + post.cta);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  };
+
+  const handleSave = () => {
+    onUpdate({ ...post, ...editData });
+    setEditing(false);
+  };
+
+  const handleCancel = () => {
+    setEditData({ title: post.title, hook: post.hook, body: post.body, cta: post.cta });
+    setEditing(false);
+  };
+
+  const fieldStyle = {
+    width: "100%", fontSize: 13, color: C.text, lineHeight: 1.6,
+    background: C.primaryDim, border: "1px solid rgba(0,146,148,0.2)", borderRadius: 6,
+    padding: "8px 10px", resize: "vertical", fontFamily: "'Manrope', sans-serif",
+    outline: "none", boxSizing: "border-box",
+  };
+
+  return (
+    <div style={{ background: C.surface, border: "1px solid " + (editing ? C.primary : C.border), borderRadius: 12, overflow: "hidden", animation: "fadeUp 0.3s ease", transition: "border-color 0.2s" }}>
+      <div style={{ padding: "20px 24px" }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <span style={{ fontSize: 10, fontWeight: 700, color: C.linkedin, padding: "2px 8px", background: C.linkedinDim, borderRadius: 4, fontFamily: "'DM Mono', monospace" }}>{String(index).padStart(2, "0")}</span>
+            {day && <span style={{ fontSize: 9, color: C.textMuted, fontFamily: "'DM Mono', monospace", letterSpacing: 0.5 }}>{day}</span>}
+            <span style={{ fontSize: 10, color: C.textMuted }}>{post.format}</span>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+            {!editing && (
+              <button onClick={() => { setEditing(true); setExpanded(true); }} title="Edit post" style={{
+                padding: "4px 10px", fontSize: 10, fontWeight: 600, borderRadius: 5,
+                background: "transparent", color: C.textMuted, border: "1px solid transparent",
+                cursor: "pointer", transition: "all 0.15s", fontFamily: "'DM Mono', monospace",
+              }}
+                onMouseEnter={e => { e.currentTarget.style.background = C.surfaceLight; e.currentTarget.style.borderColor = C.border; }}
+                onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.borderColor = "transparent"; }}>
+                Edit
+              </button>
+            )}
+            <button onClick={handleCopy} title="Copy post" style={{
+              padding: "4px 10px", fontSize: 10, fontWeight: 600, borderRadius: 5,
+              background: copied ? C.primaryDim : "transparent", color: copied ? C.primary : C.textMuted,
+              border: "1px solid " + (copied ? "rgba(0,146,148,0.3)" : "transparent"), cursor: "pointer",
+              transition: "all 0.15s", fontFamily: "'DM Mono', monospace",
+            }}
+              onMouseEnter={e => { if (!copied) { e.currentTarget.style.background = C.surfaceLight; e.currentTarget.style.borderColor = C.border; }}}
+              onMouseLeave={e => { if (!copied) { e.currentTarget.style.background = "transparent"; e.currentTarget.style.borderColor = "transparent"; }}}>
+              {copied ? "\u2713 Copied" : "Copy"}
+            </button>
+          </div>
+        </div>
+
+        {editing ? (
+          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            <div>
+              <div style={{ fontSize: 9, fontWeight: 700, color: C.textMuted, fontFamily: "'DM Mono', monospace", marginBottom: 4 }}>TITLE</div>
+              <input value={editData.title} onChange={e => setEditData({ ...editData, title: e.target.value })} style={{ ...fieldStyle, fontSize: 15, fontWeight: 700 }} />
+            </div>
+            <div>
+              <div style={{ fontSize: 9, fontWeight: 700, color: C.textMuted, fontFamily: "'DM Mono', monospace", marginBottom: 4 }}>HOOK</div>
+              <textarea value={editData.hook} onChange={e => setEditData({ ...editData, hook: e.target.value })} rows={2} style={fieldStyle} />
+            </div>
+            <div>
+              <div style={{ fontSize: 9, fontWeight: 700, color: C.textMuted, fontFamily: "'DM Mono', monospace", marginBottom: 4 }}>BODY</div>
+              <textarea value={editData.body} onChange={e => setEditData({ ...editData, body: e.target.value })} rows={8} style={fieldStyle} />
+            </div>
+            <div>
+              <div style={{ fontSize: 9, fontWeight: 700, color: C.textMuted, fontFamily: "'DM Mono', monospace", marginBottom: 4 }}>CTA</div>
+              <input value={editData.cta} onChange={e => setEditData({ ...editData, cta: e.target.value })} style={{ ...fieldStyle, color: C.primary, fontWeight: 600 }} />
+            </div>
+            <div style={{ display: "flex", gap: 6, justifyContent: "flex-end", marginTop: 4 }}>
+              <button onClick={handleCancel} style={{ padding: "6px 14px", fontSize: 11, fontWeight: 600, borderRadius: 6, background: "transparent", color: C.textMuted, border: "1px solid " + C.border, cursor: "pointer", fontFamily: "'DM Mono', monospace" }}>Cancel</button>
+              <button onClick={handleSave} style={{ padding: "6px 14px", fontSize: 11, fontWeight: 700, borderRadius: 6, background: C.primary, color: "#fff", border: "none", cursor: "pointer", fontFamily: "'DM Mono', monospace" }}>Save</button>
+            </div>
+          </div>
+        ) : (
+          <>
+            <div style={{ fontSize: 16, fontWeight: 700, color: C.text, lineHeight: 1.35, marginBottom: 8 }}>{post.title}</div>
+            <div style={{ fontSize: 13, color: C.textSecondary, lineHeight: 1.6, marginBottom: 10, fontStyle: "italic" }}>{post.hook}</div>
+            {expanded && (
+              <div style={{ animation: "fadeUp 0.2s ease" }}>
+                <div style={{ fontSize: 13, color: C.text, lineHeight: 1.7, whiteSpace: "pre-line", marginBottom: 10 }}>{post.body}</div>
+                <div style={{ fontSize: 13, color: C.primary, fontWeight: 600 }}>{post.cta}</div>
+              </div>
+            )}
+            <button onClick={() => setExpanded(!expanded)} style={{
+              marginTop: 10, padding: "6px 14px", fontSize: 11, fontWeight: 600,
+              color: C.primary, background: C.primaryDim, border: "1px solid rgba(0,146,148,0.15)",
+              borderRadius: 6, cursor: "pointer",
+            }}>
+              {expanded ? "Collapse" : "View Full Post"}
+            </button>
+          </>
+        )}
+      </div>
+    </div>
+  );
+};
+
+/* ─── SIGNAL PICKER SCREEN ─── */
+const SignalPickerScreen = ({ onNavigate, angles = [], tone, setTone, onSubmit }) => {
+  const [selected, setSelected] = useState([]);
+  const [hoveredIdx, setHoveredIdx] = useState(-1);
+  const [activeTopic, setActiveTopic] = useState("ALL");
+  const MAX_ANGLES = 3;
+  const toggleSelect = (globalIdx) => {
+    setSelected(prev => {
+      if (prev.includes(globalIdx)) return prev.filter(x => x !== globalIdx);
+      if (prev.length >= MAX_ANGLES) return prev;
+      return [...prev, globalIdx];
+    });
+  };
+
+  const topicValues = Array.from(new Set(angles.map(a => a._topic).filter(Boolean)));
+  const topicTabs = [{ value: "ALL", label: "ALL" }].concat(
+    topicValues.map((topic) => ({ value: topic, label: topic }))
+  );
+
+  const indexedAngles = angles.map((a, idx) => ({ ...a, _globalIdx: idx }));
+  const visibleAngles = activeTopic === "ALL"
+    ? indexedAngles
+    : indexedAngles.filter(a => a._topic === activeTopic);
+
+  return (
+    <div style={{ maxWidth: 720, margin: "0 auto", padding: "48px 24px 120px" }}>
+
+      {/* Heading */}
+      <div style={{ marginBottom: 20 }}>
+        <h1 style={{ fontSize: 28, fontWeight: 800, color: C.text, margin: "0 0 8px", fontFamily: "'Manrope', sans-serif" }}>Set your tone, pick your angle</h1>
+        <p style={{ fontSize: 15, color: C.textSecondary, margin: 0, lineHeight: 1.6 }}>We scanned what's actually performing across social, search & communities for your topic. Set your voice and pick max 3 angles.</p>
+      </div>
+
+      {/* ━━━ TONE OF VOICE ━━━ */}
+      <div style={{ background: C.surface, border: "1px solid " + C.border, borderRadius: 12, padding: "16px 20px", marginBottom: 20 }}>
+        <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: C.textMuted, fontFamily: "'DM Mono', monospace", letterSpacing: 0.5, marginBottom: 10 }}>TONE OF VOICE</label>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 6 }}>
+          {[
+            { label: "Direct & Expert", icon: "\uD83C\uDFAF" },
+            { label: "Conversational", icon: "\uD83D\uDCAC" },
+            { label: "Provocative", icon: "\uD83D\uDD25" },
+            { label: "Educational", icon: "\uD83D\uDCDA" },
+          ].map((t) => {
+            const active = tone === t.label;
+            return (
+              <button key={t.label} onClick={() => setTone(t.label)} style={{
+                padding: "10px 6px", fontSize: 11, fontWeight: active ? 700 : 500,
+                background: active ? C.primaryDim : C.bg,
+                color: active ? C.primary : C.textSecondary,
+                border: active ? "1.5px solid " + C.primary : "1.5px solid transparent",
+                borderRadius: 10, cursor: "pointer", transition: "all 0.15s",
+                fontFamily: "'Manrope', sans-serif", textAlign: "center",
+                boxShadow: active ? "0 0 0 3px rgba(0,146,148,0.06)" : "none",
+              }}
+                onMouseEnter={e => { if (!active) { e.currentTarget.style.background = "rgba(0,146,148,0.04)"; e.currentTarget.style.color = C.primary; }}}
+                onMouseLeave={e => { if (!active) { e.currentTarget.style.background = C.bg; e.currentTarget.style.color = C.textSecondary; }}}>
+                <div style={{ fontSize: 18, marginBottom: 4 }}>{t.icon}</div>
+                <div style={{ lineHeight: 1.3 }}>{t.label}</div>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Angle list */}
+      {topicTabs.length > 1 && (
+        <div style={{ display: "flex", gap: 8, marginBottom: 12, flexWrap: "wrap" }}>
+          {topicTabs.map((tab) => {
+            const active = activeTopic === tab.value;
+            return (
+              <button
+                key={tab.value}
+                onClick={() => setActiveTopic(tab.value)}
+                style={{
+                  padding: "8px 14px",
+                  borderRadius: 999,
+                  border: "1px solid " + (active ? C.primary : C.border),
+                  background: active ? C.primaryDim : C.surface,
+                  color: active ? C.primary : C.textSecondary,
+                  fontSize: 11,
+                  fontWeight: 700,
+                  fontFamily: "'DM Mono', monospace",
+                  letterSpacing: 0.3,
+                  cursor: "pointer",
+                }}
+              >
+                {tab.label}
+              </button>
+            );
+          })}
+        </div>
+      )}
+
+      <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+        {visibleAngles.map((angle) => {
+          const gi = angle._globalIdx;
+          const isSelected = selected.includes(gi);
+          const isHovered = hoveredIdx === gi;
+          const isDisabled = !isSelected && selected.length >= MAX_ANGLES;
+          return (
+            <button key={angle.id} onClick={() => toggleSelect(gi)}
+              onMouseEnter={() => setHoveredIdx(gi)} onMouseLeave={() => setHoveredIdx(-1)}
+              style={{
+                display: "flex", alignItems: "flex-start", gap: 12, width: "100%", textAlign: "left",
+                padding: isSelected ? "14px 16px" : "12px 16px",
+                background: isSelected ? C.primaryDim : C.surface,
+                border: isSelected ? "1.5px solid " + C.primary : "1px solid " + (isHovered && !isDisabled ? "rgba(0,146,148,0.3)" : C.border),
+                borderRadius: 10, cursor: isDisabled ? "not-allowed" : "pointer", transition: "all 0.15s",
+                boxShadow: isSelected ? "0 0 0 3px rgba(0,146,148,0.08)" : "none",
+                opacity: isDisabled ? 0.45 : 1,
+              }}>
+              <span style={{
+                width: 20, height: 20, borderRadius: 6, flexShrink: 0, marginTop: 1,
+                display: "flex", alignItems: "center", justifyContent: "center",
+                background: isSelected ? C.primary : "transparent",
+                border: isSelected ? "none" : "1.5px solid " + C.border,
+                color: "#fff", fontSize: 12, fontWeight: 800, transition: "all 0.15s",
+              }}>{isSelected ? "\u2713" : ""}</span>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                {angle._topic && (
+                  <span style={{ fontSize: 9, fontWeight: 700, color: C.primary, background: C.primaryDim, padding: "2px 7px", borderRadius: 4, fontFamily: "'DM Mono', monospace", letterSpacing: 0.3, marginBottom: 5, display: "inline-block" }}>
+                    {angle._topic}
+                  </span>
+                )}
+                <span style={{ display: "block", fontSize: 13, fontWeight: 700, color: C.text, lineHeight: 1.4 }}>{angle.angle}</span>
+                {angle.why && (
+                  <div style={{ marginTop: 6, fontSize: 12, color: C.textSecondary, lineHeight: 1.5 }}>
+                    <span style={{ fontSize: 9, fontWeight: 700, color: C.textMuted, fontFamily: "'DM Mono', monospace", letterSpacing: 0.5, marginRight: 6 }}>WHY THIS ANGLE</span>
+                    {angle.why}
+                  </div>
+                )}
+              </div>
+            </button>
+          );
+        })}
+        {visibleAngles.length === 0 && (
+          <div style={{ padding: "14px 16px", borderRadius: 10, background: C.surface, border: "1px solid " + C.border, fontSize: 12, color: C.textMuted }}>
+            No angles available for this topic.
+          </div>
+        )}
+      </div>
+
+      {/* Sticky bottom CTA */}
+      {selected.length > 0 && (
+        <div style={{
+          position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 100,
+          background: "rgba(255,255,255,0.95)", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)",
+          borderTop: "1px solid " + C.border, padding: "14px 24px",
+          display: "flex", alignItems: "center", justifyContent: "center", gap: 16,
+          animation: "fadeUp 0.2s ease",
+        }}>
+          <div style={{ fontSize: 13, color: C.text }}>
+            <span style={{ fontWeight: 700 }}>{selected.length} angle{selected.length > 1 ? "s" : ""} selected</span>
+            <span style={{ color: C.textMuted, marginLeft: 8 }}>(max {MAX_ANGLES})</span>
+          </div>
+          <button onClick={() => onSubmit(selected.map(gi => angles[gi].id), tone)} style={{
+            padding: "10px 28px", fontSize: 14, fontWeight: 700, borderRadius: 10,
+            background: "linear-gradient(135deg, " + C.primary + ", " + C.primaryLight + ")",
+            color: "#ffffff", border: "none", cursor: "pointer",
+            fontFamily: "'Manrope', sans-serif", boxShadow: "0 4px 20px " + C.primaryGlow,
+            transition: "all 0.2s", letterSpacing: 0.3, flexShrink: 0,
+          }}
+            onMouseEnter={e => { e.target.style.transform = "translateY(-1px)"; }}
+            onMouseLeave={e => { e.target.style.transform = "translateY(0)"; }}>
+            {"Generate My Content \u2192"}
+          </button>
+        </div>
+      )}
+    </div>
+  );
+};
+
+/* ─── GENERATING POSTS SCREEN ─── */
+const GeneratingPostsScreen = ({ jobId, onComplete }) => {
+  const [error, setError] = useState(null);
+  const [progress, setProgress] = useState(0);
+  const steps = [
+    { label: "Writing X posts for each angle", status: progress > 25 ? "done" : progress > 3 ? "active" : "pending" },
+    { label: "Crafting LinkedIn posts", status: progress > 55 ? "done" : progress > 25 ? "active" : "pending" },
+    { label: "Generating article ideas", status: progress > 85 ? "done" : progress > 55 ? "active" : "pending" },
+    { label: "Finalising your content plan", status: progress >= 100 ? "done" : progress > 85 ? "active" : "pending" },
+  ];
+
+  useEffect(() => {
+    const t = setInterval(() => setProgress(p => p >= 92 ? 92 : p + 0.5), 200);
+    return () => clearInterval(t);
+  }, []);
+
+  useEffect(() => {
+    if (!jobId) return;
+    let cancelled = false;
+    const poll = async () => {
+      try {
+        const data = await api.getAngles(jobId);
+        if (cancelled) return;
+        const topLevelStatus = data?.result?.post_gen_status || null;
+        const topicStatuses = (data?.result?.results || [])
+          .map((r) => r?.post_gen_status)
+          .filter(Boolean);
+        const effectiveStatus =
+          topLevelStatus ||
+          (topicStatuses.length > 0 ? topicStatuses[0] : null);
+
+        if (effectiveStatus === "COMPLETED") {
+          setProgress(100);
+          setTimeout(() => onComplete(data), 600);
+        } else if (effectiveStatus === "FAILED") {
+          const topicError = (data?.result?.results || [])
+            .map((r) => r?.post_gen_error)
+            .find(Boolean);
+          setError(topicError || "Post generation failed. Please try again.");
+        } else {
+          setTimeout(poll, 3000);
+        }
+      } catch (e) {
+        if (!cancelled) setTimeout(poll, 5000);
+      }
+    };
+    setTimeout(poll, 3000);
+    return () => { cancelled = true; };
+  }, [jobId]);
+
+  return (
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "80vh", padding: 20 }}>
+      <div style={{ background: C.surface, border: "1px solid " + C.border, borderRadius: 20, padding: "40px 36px", width: "100%", maxWidth: 500, textAlign: "center", position: "relative" }}>
+        <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: "linear-gradient(90deg, " + C.primary + ", " + C.primaryLight + ", transparent)", borderRadius: "20px 20px 0 0" }} />
+        <h3 style={{ fontSize: 22, fontWeight: 700, color: C.text, margin: "0 0 6px", fontFamily: "'Manrope', sans-serif" }}>Writing your content...</h3>
+        <p style={{ fontSize: 14, color: C.textMuted, marginBottom: 28 }}>Generating X posts, LinkedIn posts, and article ideas for your angles</p>
+
+        <div style={{ display: "flex", flexDirection: "column", gap: 0, textAlign: "left", marginBottom: 32 }}>
+          {steps.map((s, i) => (
+            <div key={s.label} style={{ display: "flex", alignItems: "flex-start", gap: 14 }}>
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                <div style={{ width: 30, height: 30, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 700, flexShrink: 0, background: s.status === "done" ? C.greenDim : s.status === "active" ? C.primaryDim : C.surfaceLight, color: s.status === "done" ? C.green : s.status === "active" ? C.primary : C.textMuted, border: "2px solid " + (s.status === "done" ? C.green : s.status === "active" ? C.primary : C.border), transition: "all 0.3s ease" }}>
+                  {s.status === "done" ? "\u2713" : s.status === "active" ? (
+                    <span style={{ display: "inline-block", animation: "spin 1s linear infinite", fontSize: 14 }}>{"\u27F3"}</span>
+                  ) : (i + 1)}
+                </div>
+                {i < steps.length - 1 && <div style={{ width: 2, height: 24, background: s.status === "done" ? C.green : C.border, transition: "background 0.3s" }} />}
+              </div>
+              <div style={{ paddingTop: 4 }}>
+                <div style={{ fontSize: 14, fontWeight: 600, color: s.status === "pending" ? C.textMuted : C.text }}>{s.label}</div>
+                <div style={{ fontSize: 11, color: s.status === "done" ? C.green : s.status === "active" ? C.primary : C.textMuted }}>
+                  {s.status === "done" ? "Complete" : s.status === "active" ? "In progress..." : "Waiting"}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div style={{ background: C.surfaceLight, borderRadius: 8, height: 8, overflow: "hidden", marginBottom: 12 }}>
+          <div style={{ width: Math.round(progress) + "%", height: "100%", borderRadius: 8, transition: "width 0.4s", background: "linear-gradient(90deg, " + C.primary + ", " + C.primaryLight + ")" }} />
+        </div>
+        <div style={{ fontSize: 12, color: C.textMuted, fontFamily: "'DM Mono', monospace" }}>{Math.round(progress)}% complete</div>
+        {error && <div style={{ marginTop: 16, padding: "8px 14px", background: C.redDim, border: "1px solid " + C.red, borderRadius: 8, fontSize: 12, color: C.red }}>{error}</div>}
+      </div>
+    </div>
+  );
+};
+
+/* ─── CONTENT REPORT SCREEN ─── */
+
+const INITIAL_SCHEDULE = [
+  { day: "MON", posts: [{ type: "x", idx: 0 }] },
+  { day: "TUE", posts: [{ type: "x", idx: 1 }] },
+  { day: "WED", posts: [{ type: "x", idx: 2 }, { type: "li", idx: 0 }] },
+  { day: "THU", posts: [{ type: "x", idx: 3 }] },
+  { day: "FRI", posts: [{ type: "x", idx: 4 }] },
+  { day: "SAT", posts: [] },
+  { day: "SUN", posts: [{ type: "x", idx: 5 }, { type: "li", idx: 1 }] },
+];
+
+const DAY_LABELS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
+const ScheduleStrip = ({ schedule, onScheduleChange }) => {
+  // selected = { dayIdx, postIdxInDay } — the post being moved
+  const [selected, setSelected] = useState(null);
+
+  const handlePostClick = (dayIdx, postIdxInDay, e) => {
+    e.stopPropagation();
+    if (selected && selected.dayIdx === dayIdx && selected.postIdxInDay === postIdxInDay) {
+      setSelected(null); // deselect
+    } else {
+      setSelected({ dayIdx, postIdxInDay });
+    }
+  };
+
+  const handleDayClick = (targetDayIdx) => {
+    if (!selected) return;
+    if (selected.dayIdx === targetDayIdx) { setSelected(null); return; }
+
+    const next = schedule.map(s => ({ ...s, posts: [...s.posts] }));
+    const post = next[selected.dayIdx].posts.splice(selected.postIdxInDay, 1)[0];
+    next[targetDayIdx].posts.push(post);
+    onScheduleChange(next);
+    setSelected(null);
+  };
+
+  const postLabel = (p) => p.type === "x" ? "𝕏 " + (p.idx + 1) : "in " + (p.idx + 1);
+
+  return (
+    <div style={{ marginBottom: 32 }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <div style={{ width: 28, height: 28, borderRadius: 7, background: "linear-gradient(135deg, " + C.primary + ", " + C.primaryLight + ")", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13 }}>📅</div>
+          <span style={{ fontSize: 14, fontWeight: 700, color: C.text, fontFamily: "'Manrope', sans-serif" }}>Posting Schedule</span>
+        </div>
+        {selected ? (
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <span style={{ fontSize: 11, color: C.primary, fontWeight: 600, fontFamily: "'DM Mono', monospace" }}>
+              Moving {schedule[selected.dayIdx].posts[selected.postIdxInDay]?.type === "x" ? "X" : "LinkedIn"} Post — click a day
+            </span>
+            <button onClick={() => setSelected(null)} style={{ fontSize: 10, color: C.textMuted, background: "none", border: "1px solid " + C.border, borderRadius: 4, padding: "2px 8px", cursor: "pointer", fontFamily: "'DM Mono', monospace" }}>Cancel</button>
+          </div>
+        ) : (
+          <span style={{ fontSize: 10, color: C.textMuted, fontFamily: "'DM Mono', monospace" }}>Click a post to move it</span>
+        )}
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 8 }}>
+        {schedule.map((s, i) => {
+          const empty = s.posts.length === 0;
+          const isHeavy = s.posts.length > 1;
+          const isDropTarget = selected && selected.dayIdx !== i;
+          return (
+            <div key={i} onClick={() => handleDayClick(i)} style={{
+              borderRadius: 12, overflow: "hidden", cursor: selected ? "pointer" : "default",
+              border: isDropTarget ? "1.5px dashed " + C.primary : (empty ? "1px dashed " + C.border : isHeavy ? "1.5px solid " + C.primary : "1px solid " + C.border),
+              background: isDropTarget ? C.primaryDim : (empty ? "transparent" : C.surface),
+              opacity: empty && !isDropTarget ? 0.5 : 1,
+              transition: "all 0.2s",
+              transform: isDropTarget ? "scale(1.02)" : "scale(1)",
+            }}>
+              {/* Day header */}
+              <div style={{
+                padding: "8px 0", textAlign: "center",
+                background: empty ? "transparent" : isHeavy ? "linear-gradient(135deg, " + C.primary + ", " + C.primaryLight + ")" : C.surfaceLight,
+                borderBottom: empty ? "none" : "1px solid " + (isHeavy ? "rgba(0,146,148,0.2)" : C.border),
+              }}>
+                <div style={{
+                  fontSize: 10, fontWeight: 800, letterSpacing: 1,
+                  fontFamily: "'DM Mono', monospace",
+                  color: isHeavy ? "#fff" : (empty ? C.textMuted : C.text),
+                }}>{s.day}</div>
+              </div>
+              {/* Post badges */}
+              <div style={{ padding: "8px 6px", display: "flex", flexDirection: "column", alignItems: "center", gap: 5, minHeight: 48 }}>
+                {s.posts.map((p, pi) => {
+                  const isX = p.type === "x";
+                  const isSelected = selected && selected.dayIdx === i && selected.postIdxInDay === pi;
+                  return (
+                    <div key={pi} onClick={(e) => handlePostClick(i, pi, e)} style={{
+                      display: "flex", alignItems: "center", gap: 4, padding: "4px 8px",
+                      background: isSelected ? (isX ? "rgba(0,0,0,0.12)" : "rgba(10,102,194,0.15)") : (isX ? "rgba(0,0,0,0.04)" : C.linkedinDim),
+                      borderRadius: 6, width: "100%", justifyContent: "center",
+                      cursor: "pointer", transition: "all 0.15s",
+                      border: isSelected ? "1.5px solid " + (isX ? C.twitter : C.linkedin) : "1.5px solid transparent",
+                      transform: isSelected ? "scale(1.05)" : "scale(1)",
+                    }}>
+                      <span style={{ fontSize: isX ? 11 : 9, fontWeight: 800, color: isX ? C.text : C.linkedin }}>{isX ? "𝕏" : "in"}</span>
+                      <span style={{ fontSize: 9, fontWeight: 700, color: isX ? C.text : C.linkedin, fontFamily: "'DM Mono', monospace" }}>{p.idx + 1}</span>
+                    </div>
+                  );
+                })}
+                {empty && !isDropTarget && (
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: 48 }}>
+                    <span style={{ fontSize: 18, opacity: 0.4 }}>—</span>
+                  </div>
+                )}
+                {empty && isDropTarget && (
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: 48 }}>
+                    <span style={{ fontSize: 10, color: C.primary, fontWeight: 600, fontFamily: "'DM Mono', monospace" }}>Drop here</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
+const ExportBar = ({ xPosts, liPosts, schedule }) => {
+  const handleExport = () => {
+    let doc = "CONTENTSPARK — THIS WEEK'S CONTENT CALENDAR\n";
+    doc += "Topic: " + PLAN.topic + "\n";
+    doc += "=" .repeat(60) + "\n\n";
+
+    doc += "BRIEF\n" + "-".repeat(40) + "\n";
+    doc += "Angle: " + PLAN.brief.angle + "\n";
+    doc += "Target Audience: " + PLAN.brief.audience + "\n";
+    doc += "Tone: " + PLAN.brief.tone + "\n";
+    doc += "Goal: " + PLAN.brief.goal + "\n";
+
+    doc += "\n\nPOSTING SCHEDULE\n" + "-".repeat(40) + "\n";
+    (schedule || INITIAL_SCHEDULE).forEach(s => {
+      const labels = s.posts.map(p => p.type === "x" ? "X Post " + (p.idx+1) : "LinkedIn " + (p.idx+1));
+      doc += s.day + ": " + (labels.length ? labels.join(", ") : "Rest") + "\n";
+    });
+
+    const xData = xPosts || PLAN.x;
+    const liData = liPosts || PLAN.linkedin;
+
+    doc += "\n\nX / TWITTER POSTS (" + xData.length + ")\n" + "-".repeat(40) + "\n";
+    xData.forEach((p, i) => {
+      doc += "\nX POST " + (i+1) + "\n" + p.text + "\n" + p.hashtags + "\n";
+    });
+
+    doc += "\n\nLINKEDIN POSTS (" + liData.length + ")\n" + "-".repeat(40) + "\n";
+    liData.forEach((p, i) => {
+      doc += "\nLINKEDIN " + (i+1) + ": " + p.title + "\n";
+      doc += p.hook + "\n\n" + p.body + "\n\n" + p.cta + "\n";
+    });
+
+    doc += "\n\nREPURPOSE MAP\n" + "-".repeat(40) + "\n";
+    [...xData, ...liData].forEach((p, i) => {
+      if (p.repurpose) {
+        const label = i < xData.length ? "X Post " + (i+1) : "LinkedIn " + (i - xData.length + 1);
+        doc += "\n" + label + ":\n";
+        p.repurpose.forEach(r => {
+          doc += "  \u2192 " + r.channel + ": " + r.piece + " (" + r.effort + ")\n";
+        });
+      }
+    });
+
+    const blob = new Blob([doc], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "ContentSpark_Calendar_" + PLAN.topic.replace(/\s+/g, "_") + ".txt";
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  return (
+    <button onClick={handleExport} style={{
+      padding: "6px 16px", fontSize: 11, fontWeight: 600,
+      background: C.surface, color: C.text, border: "1px solid " + C.border,
+      borderRadius: 8, cursor: "pointer", fontFamily: "'Manrope', sans-serif",
+      display: "flex", alignItems: "center", gap: 6,
+      transition: "all 0.15s",
+    }}
+      onMouseEnter={e => { e.currentTarget.style.borderColor = C.primary; e.currentTarget.style.color = C.primary; }}
+      onMouseLeave={e => { e.currentTarget.style.borderColor = C.border; e.currentTarget.style.color = C.text; }}>
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Export Plan
+    </button>
+  );
+};
+
+/* Repurpose section — grouped by channel */
+const RepurposeSourceCard = ({ src }) => {
+  const [open, setOpen] = useState(false);
+  return (
+    <div style={{ background: C.surface, border: "1px solid " + C.border, borderRadius: 10, overflow: "hidden" }}>
+      <button onClick={() => setOpen(!open)} style={{
+        width: "100%", padding: "10px 14px", border: "none", background: "transparent",
+        borderBottom: open ? "1px solid " + C.border : "none",
+        display: "flex", alignItems: "center", gap: 8, cursor: "pointer", textAlign: "left",
+      }}>
+        <span style={{ fontSize: 9, fontWeight: 700, color: src.color, padding: "2px 8px", background: src.bg, borderRadius: 4, fontFamily: "'DM Mono', monospace", flexShrink: 0 }}>{src.label}</span>
+        <span style={{ fontSize: 12, color: C.textSecondary, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", flex: 1 }}>{src.preview}</span>
+        <span style={{ fontSize: 10, color: C.textMuted, fontFamily: "'DM Mono', monospace", flexShrink: 0 }}>→ {src.items.length}</span>
+        <span style={{ fontSize: 14, color: C.textMuted, transition: "transform 0.2s", transform: open ? "rotate(180deg)" : "rotate(0)", flexShrink: 0 }}>▾</span>
+      </button>
+      {open && (
+        <div style={{ padding: "8px 10px", display: "flex", flexDirection: "column", gap: 6, animation: "fadeUp 0.15s ease" }}>
+          {src.items.map((r, ri) => (
+            <div key={ri} style={{ display: "flex", alignItems: "flex-start", gap: 8, padding: "8px 10px", borderRadius: 6, background: C.bg }}>
+              <div style={{ width: 22, height: 22, borderRadius: 5, display: "flex", alignItems: "center", justifyContent: "center", background: r.bg, fontSize: 10, fontWeight: 700, color: r.color, flexShrink: 0, marginTop: 1 }}>{r.icon}</div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 3 }}>
+                  <span style={{ fontSize: 11, fontWeight: 700, color: r.color }}>{r.channel}</span>
+                  <span style={{ fontSize: 9, color: C.textMuted, fontFamily: "'DM Mono', monospace", padding: "1px 6px", background: C.surface, borderRadius: 3, border: "1px solid " + C.border }}>~{r.effort}</span>
+                </div>
+                <div style={{ fontSize: 12, color: C.text, lineHeight: 1.5 }}>{r.piece}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+const RepurposeSection = ({ xPosts, liPosts }) => {
+  const sources = [];
+  xPosts.forEach((p, i) => {
+    if (p.repurpose && p.repurpose.length > 0) {
+      sources.push({
+        label: "X Post " + (i + 1),
+        preview: p.text.split("\n")[0].substring(0, 60) + (p.text.split("\n")[0].length > 60 ? "..." : ""),
+        platform: "x",
+        color: C.twitter,
+        bg: C.twitterDim,
+        items: p.repurpose,
+      });
+    }
+  });
+  liPosts.forEach((p, i) => {
+    if (p.repurpose && p.repurpose.length > 0) {
+      sources.push({
+        label: "LinkedIn Post " + (i + 1),
+        preview: p.title,
+        platform: "li",
+        color: C.linkedin,
+        bg: C.linkedinDim,
+        items: p.repurpose,
+      });
+    }
+  });
+
+  if (sources.length === 0) return null;
+
+  const totalIdeas = sources.reduce((sum, s) => sum + s.items.length, 0);
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div style={{ marginBottom: 40 }}>
+      <button onClick={() => setOpen(!open)} style={{
+        display: "flex", alignItems: "center", gap: 10, width: "100%", textAlign: "left",
+        padding: "14px 18px", background: C.surface, border: "1px solid " + C.border,
+        borderRadius: 10, cursor: "pointer", transition: "all 0.15s",
+      }}
+        onMouseEnter={e => { e.currentTarget.style.borderColor = "rgba(0,146,148,0.3)"; }}
+        onMouseLeave={e => { e.currentTarget.style.borderColor = C.border; }}>
+        <span style={{ fontSize: 16 }}>🔁</span>
+        <div style={{ flex: 1 }}>
+          <span style={{ fontSize: 13, fontWeight: 700, color: C.text }}>Repurpose Map</span>
+          <span style={{ fontSize: 12, color: C.textMuted, marginLeft: 8 }}>{totalIdeas} ideas from {sources.length} posts</span>
+        </div>
+        <span style={{ fontSize: 16, color: C.textMuted, transition: "transform 0.2s", transform: open ? "rotate(180deg)" : "rotate(0)" }}>▾</span>
+      </button>
+
+      {open && (
+        <div style={{ marginTop: 10, display: "flex", flexDirection: "column", gap: 8, animation: "fadeUp 0.2s ease" }}>
+          {sources.map((src, si) => <RepurposeSourceCard key={si} src={src} />)}
+        </div>
+      )}
+    </div>
+  );
+};
+
+const AdjustDialog = ({ onClose, onNavigate, frequency, setFrequency, tone, setTone }) => {
+  const MAX_FREQUENCY = 2;
+  const TONES = ["Direct & Expert", "Conversational", "Provocative", "Educational"];
+  const [localFreq, setLocalFreq] = useState(frequency || 1);
+  const [localTone, setLocalTone] = useState(tone || "Conversational");
+
+  const handleApply = () => {
+    if (setFrequency) setFrequency(localFreq);
+    if (setTone) setTone(localTone);
+    onClose();
+  };
+
+  return (
+    <div style={{
+      position: "fixed", inset: 0, zIndex: 1000,
+      background: "rgba(0,0,0,0.35)", backdropFilter: "blur(4px)",
+      display: "flex", alignItems: "center", justifyContent: "center",
+      padding: 20,
+    }} onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
+      <div style={{
+        background: "#fff", borderRadius: 16, width: "100%", maxWidth: 420,
+        boxShadow: "0 20px 60px rgba(0,0,0,0.18)", overflow: "hidden",
+        animation: "fadeUp 0.18s ease",
+      }}>
+        {/* Header */}
+        <div style={{ padding: "20px 24px 16px", borderBottom: "1px solid " + C.border, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <div>
+            <div style={{ fontSize: 16, fontWeight: 800, color: C.text, fontFamily: "'Manrope', sans-serif" }}>Adjust Settings</div>
+            <div style={{ fontSize: 12, color: C.textMuted, marginTop: 2 }}>Update your preferences for this calendar</div>
+          </div>
+          <button onClick={onClose} style={{ width: 28, height: 28, borderRadius: 8, border: "1px solid " + C.border, background: C.surface, cursor: "pointer", fontSize: 14, color: C.textMuted, display: "flex", alignItems: "center", justifyContent: "center" }}>✕</button>
+        </div>
+
+        {/* Body */}
+        <div style={{ padding: "20px 24px", display: "flex", flexDirection: "column", gap: 20 }}>
+
+          {/* Frequency */}
+          <div>
+            <label style={{ display: "flex", alignItems: "center", justifyContent: "space-between", fontSize: 11, fontWeight: 700, color: C.textMuted, fontFamily: "'DM Mono', monospace", letterSpacing: 0.5, marginBottom: 10 }}>
+              <span>FREQUENCY <span style={{ fontWeight: 400, opacity: 0.6, textTransform: "none", letterSpacing: 0 }}>(posts per week)</span></span>
+              <span style={{ color: C.primary }}>{localFreq}x / week</span>
+            </label>
+            <div style={{ display: "flex", gap: 8 }}>
+              {[1, 2].map(n => (
+                <button key={n} onClick={() => setLocalFreq(n)} style={{
+                  flex: 1, padding: "10px 0", borderRadius: 10, fontSize: 14, fontWeight: 700,
+                  border: "1.5px solid " + (localFreq === n ? C.primary : C.border),
+                  background: localFreq === n ? C.primaryDim : C.surface,
+                  color: localFreq === n ? C.primary : C.textSecondary,
+                  cursor: "pointer", fontFamily: "'Manrope', sans-serif", transition: "all 0.15s",
+                }}>
+                  {n}x
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Tone */}
+          <div>
+            <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: C.textMuted, fontFamily: "'DM Mono', monospace", letterSpacing: 0.5, marginBottom: 10 }}>TONE OF VOICE</label>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+              {TONES.map(t => (
+                <button key={t} onClick={() => setLocalTone(t)} style={{
+                  padding: "9px 12px", borderRadius: 10, fontSize: 12, fontWeight: localTone === t ? 700 : 500,
+                  border: "1.5px solid " + (localTone === t ? C.primary : C.border),
+                  background: localTone === t ? C.primaryDim : C.surface,
+                  color: localTone === t ? C.primary : C.textSecondary,
+                  cursor: "pointer", fontFamily: "'Manrope', sans-serif", transition: "all 0.15s", textAlign: "left",
+                }}>
+                  {t}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Nav shortcuts */}
+          <div>
+            <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: C.textMuted, fontFamily: "'DM Mono', monospace", letterSpacing: 0.5, marginBottom: 10 }}>GO BACK TO</label>
+            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+              {[
+                { label: "Change Topic", icon: "📝", step: 0 },
+                { label: "Pick Angles", icon: "🎯", step: 2 },
+              ].map(btn => (
+                <button key={btn.label} onClick={() => { onClose(); onNavigate && onNavigate(btn.step); }} style={{
+                  padding: "8px 14px", fontSize: 11, fontWeight: 600, borderRadius: 999,
+                  background: C.surface, color: C.textSecondary,
+                  border: "1px solid " + C.border, cursor: "pointer",
+                  fontFamily: "'Manrope', sans-serif", display: "inline-flex", alignItems: "center", gap: 5,
+                  transition: "all 0.15s",
+                }}
+                  onMouseEnter={e => { e.currentTarget.style.borderColor = C.primary; e.currentTarget.style.color = C.primary; }}
+                  onMouseLeave={e => { e.currentTarget.style.borderColor = C.border; e.currentTarget.style.color = C.textSecondary; }}>
+                  <span>{btn.icon}</span> {btn.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div style={{ padding: "14px 24px 20px", borderTop: "1px solid " + C.border, display: "flex", gap: 10, justifyContent: "flex-end" }}>
+          <button onClick={onClose} style={{ padding: "9px 20px", fontSize: 13, fontWeight: 600, borderRadius: 10, background: "transparent", color: C.textMuted, border: "1px solid " + C.border, cursor: "pointer", fontFamily: "'Manrope', sans-serif" }}>
+            Cancel
+          </button>
+          <button onClick={handleApply} style={{ padding: "9px 24px", fontSize: 13, fontWeight: 700, borderRadius: 10, background: "linear-gradient(135deg, " + C.primary + ", " + C.primaryLight + ")", color: "#fff", border: "none", cursor: "pointer", fontFamily: "'Manrope', sans-serif", boxShadow: "0 4px 14px " + C.primaryGlow }}>
+            Apply
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const ReportScreen = ({ onNavigate, jobData, selectedAngleIds, tone, setTone, frequency, setFrequency }) => {
+  const [activeAngle, setActiveAngle] = useState(0);
+  const [adjustOpen, setAdjustOpen] = useState(false);
+
+  // Build per-angle post state from API data
+  // Flatten all topics' angles and generated_posts into single maps
+  const allTopicResults = (jobData && jobData.result && jobData.result.results) || [];
+  const angles = allTopicResults.flatMap(r => (r.angles || []).map(a => ({ ...a, _topic: r.topic })));
+  const generatedPosts = allTopicResults.reduce((acc, r) => Object.assign(acc, r.generated_posts || {}), {});
+
+  // Only show selected angles (or all if none specified)
+  const selectedAngles = selectedAngleIds && selectedAngleIds.length > 0
+    ? angles.filter(a => selectedAngleIds.includes(a.id))
+    : angles;
+
+  // Per-angle editable post state keyed by angle id
+  const [anglePostsMap, setAnglePostsMap] = useState(() => {
+    const map = {};
+    selectedAngles.forEach(angle => {
+      const posts = generatedPosts[angle.id] || {};
+      map[angle.id] = {
+        x: (posts.x_posts || []).map(mapXPost),
+        li: (posts.linkedin_posts || []).map(mapLinkedinPost),
+        articles: posts.article_ideas || [],
+      };
+    });
+    return map;
+  });
+
+  const currentAngle = selectedAngles[activeAngle];
+  const currentPosts = currentAngle ? (anglePostsMap[currentAngle.id] || { x: [], li: [], articles: [] }) : { x: [], li: [], articles: [] };
+
+  const updateXPost = (idx, updated) => {
+    setAnglePostsMap(prev => {
+      const cur = prev[currentAngle.id];
+      const next = [...cur.x]; next[idx] = updated;
+      return { ...prev, [currentAngle.id]: { ...cur, x: next } };
+    });
+  };
+  const updateLiPost = (idx, updated) => {
+    setAnglePostsMap(prev => {
+      const cur = prev[currentAngle.id];
+      const next = [...cur.li]; next[idx] = updated;
+      return { ...prev, [currentAngle.id]: { ...cur, li: next } };
+    });
+  };
+
+  const xPosts = currentPosts.x;
+  const liPosts = currentPosts.li;
+  const articleIdeas = currentPosts.articles;
+
+  const [schedule, setSchedule] = useState(INITIAL_SCHEDULE.map(s => ({ ...s, posts: [...s.posts] })));
+  const xDayMap = {};
+  const liDayMap = {};
+  schedule.forEach(s => {
+    s.posts.forEach(p => {
+      if (p.type === "x") xDayMap[p.idx] = s.day;
+      if (p.type === "li") liDayMap[p.idx] = s.day;
+    });
+  });
+
+  return (
+    <div style={{ maxWidth: 920, margin: "0 auto", padding: "40px 24px 80px" }}>
+
+      {/* Header */}
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
+        <h1 style={{ fontSize: 26, fontWeight: 800, color: C.text, margin: 0, lineHeight: 1.3, fontFamily: "'Manrope', sans-serif" }}>
+          This Week's Content Calendar
+        </h1>
+        <ExportBar xPosts={xPosts} liPosts={liPosts} schedule={schedule} />
+      </div>
+
+      {/* Summary Bar */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10, marginBottom: 24 }}>
+        {[
+          { icon: <span style={{ fontSize: 16 }}>&#120143;</span>, label: "X Posts", count: xPosts.length, color: C.twitter, dim: C.twitterDim },
+          { icon: "in", label: "LinkedIn Posts", count: liPosts.length, color: C.linkedin, dim: C.linkedinDim },
+          { icon: "\uD83D\uDCDD", label: "Article Topics", count: articleIdeas.length, color: C.primary, dim: C.primaryDim },
+        ].map((ch, i) => (
+          <div key={i} style={{ background: C.surface, border: "1px solid " + C.border, borderRadius: 10, padding: "16px 18px", display: "flex", alignItems: "center", gap: 12 }}>
+            <div style={{ width: 36, height: 36, borderRadius: 8, background: ch.dim, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 800, color: ch.color, flexShrink: 0 }}>{ch.icon}</div>
+            <div>
+              <div style={{ fontSize: 22, fontWeight: 800, color: C.text, fontFamily: "'Manrope', sans-serif", lineHeight: 1 }}>{ch.count}</div>
+              <div style={{ fontSize: 10, fontWeight: 600, color: C.textMuted, fontFamily: "'DM Mono', monospace", letterSpacing: 0.3, marginTop: 2 }}>{ch.label}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Angle Tabs */}
+      {selectedAngles.length > 1 && (
+        <div style={{ display: "flex", gap: 0, marginBottom: 24, borderBottom: "2px solid " + C.border, overflowX: "auto" }}>
+          {selectedAngles.map((angle, i) => {
+            const active = activeAngle === i;
+            return (
+              <button key={angle.id} onClick={() => setActiveAngle(i)} style={{
+                padding: "12px 20px", fontSize: 12, fontWeight: active ? 700 : 500,
+                color: active ? C.primary : C.textMuted,
+                background: "transparent", border: "none", cursor: "pointer",
+                borderBottom: active ? "2px solid " + C.primary : "2px solid transparent",
+                marginBottom: -2, transition: "all 0.15s",
+                fontFamily: "'Manrope', sans-serif", maxWidth: 280,
+                textAlign: "left", lineHeight: 1.4, flexShrink: 0, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
+              }}
+                onMouseEnter={e => { if (!active) e.currentTarget.style.color = C.text; }}
+                onMouseLeave={e => { if (!active) e.currentTarget.style.color = C.textMuted; }}>
+                <span style={{ fontSize: 9, fontWeight: 700, fontFamily: "'DM Mono', monospace", letterSpacing: 0.5, display: "block", marginBottom: 2, color: active ? C.primary : C.textMuted, opacity: 0.7 }}>ANGLE {i + 1}</span>
+                {angle.angle}
+              </button>
+            );
+          })}
+        </div>
+      )}
+
+      {/* X / Twitter */}
+      {xPosts.length > 0 && (
+        <div style={{ marginBottom: 40 }}>
+          <ChannelHeader icon={<span style={{ fontSize: 16 }}>&#120143;</span>} label="X / Twitter" count={xPosts.length} color={C.twitter} colorDim={C.twitterDim} />
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10 }}>
+            {xPosts.map((post, i) => (
+              <XPostCard key={post.id || i} post={post} index={i + 1} day={xDayMap[i]} onUpdate={(updated) => updateXPost(i, updated)} />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* LinkedIn */}
+      {liPosts.length > 0 && (
+        <div style={{ marginBottom: 40 }}>
+          <ChannelHeader icon="in" label="LinkedIn" count={liPosts.length} color={C.linkedin} colorDim={C.linkedinDim} />
+          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+            {liPosts.map((post, i) => (
+              <LinkedInCard key={post.id || i} post={post} index={i + 1} day={liDayMap[i]} onUpdate={(updated) => updateLiPost(i, updated)} />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Articles */}
+      {articleIdeas.length > 0 && (
+        <div style={{ marginBottom: 40 }}>
+          <ChannelHeader icon={<span style={{ fontSize: 16 }}>{"\uD83D\uDCDD"}</span>} label="Article Ideas" count={articleIdeas.length} color={C.primary} colorDim={C.primaryDim} />
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            {articleIdeas.map((article, i) => (
+              <div key={article.id || i} style={{ background: C.surface, border: "1px solid " + C.border, borderRadius: 10, padding: "14px 16px" }}>
+                <div style={{ display: "flex", alignItems: "flex-start", gap: 12 }}>
+                  <span style={{ width: 24, height: 24, borderRadius: 6, background: C.primaryDim, color: C.primary, fontSize: 11, fontWeight: 800, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'DM Mono', monospace", flexShrink: 0, marginTop: 1 }}>{i + 1}</span>
+                  <div>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: C.text, lineHeight: 1.4 }}>{article.headline}</div>
+                    {article.why && <div style={{ fontSize: 12, color: C.textSecondary, marginTop: 6, lineHeight: 1.5 }}>{article.why}</div>}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Long-Form CTA */}
+      <div style={{ background: "linear-gradient(135deg, rgba(0,146,148,0.08) 0%, rgba(0,109,111,0.04) 100%)", border: "1px solid rgba(0,146,148,0.25)", borderRadius: 16, padding: "32px 28px", textAlign: "center", marginBottom: 20 }}>
+        <div style={{ fontSize: 10, fontWeight: 700, color: C.primary, fontFamily: "'DM Mono', monospace", letterSpacing: 1, marginBottom: 10 }}>NEXT STEP</div>
+        <h3 style={{ fontSize: 20, fontWeight: 800, color: C.text, margin: "0 0 8px", fontFamily: "'Manrope', sans-serif" }}>Your posts create demand. These articles capture it.</h3>
+        <p style={{ fontSize: 14, color: C.textSecondary, margin: "0 0 20px", lineHeight: 1.6, maxWidth: 500, marginLeft: "auto", marginRight: "auto" }}>Posts spark curiosity. The search that follows — on Google or through an AI — gets answered by the article that earns the citation. We research, write, and optimize all 3.</p>
+        <a href="#" style={{
+          display: "inline-block", padding: "14px 36px", fontSize: 15, fontWeight: 700, borderRadius: 12,
+          background: "linear-gradient(135deg, " + C.primary + ", " + C.primaryLight + ")",
+          color: "#ffffff", textDecoration: "none", cursor: "pointer",
+          fontFamily: "'Manrope', sans-serif", boxShadow: "0 4px 20px " + C.primaryGlow,
+          transition: "all 0.3s", letterSpacing: 0.3,
+        }}>Write My Articles →</a>
+      </div>
+
+    </div>
+  );
+};
+
+/* ─── PRD SCREEN ─── */
+const PRDScreen = () => {
+  const [expandedSection, setExpandedSection] = useState(0);
+
+  const sections = [
+    {
+      title: "What You're Building",
+      content: [
+        { label: "One-Liner", value: "ContentSpark is a free tool on the VisibilityStack website. User enters a topic + email, picks an angle from AI-detected signals, sets a brief (audience, tone, goal), and gets a fully editable weekly content calendar with X posts, LinkedIn posts, posting schedule, and repurpose map." },
+        { label: "Core Loop", value: "First visit: Topic + Email → Pick Angle → Set Brief → Content Calendar. User is auto-enrolled for weekly delivery the moment they submit the landing form. Every Monday, a fresh calendar lands in their inbox based on their saved topic + brief. No separate opt-in needed." },
+        { label: "Lead Capture", value: "Email is collected upfront on the landing page as a required field. Every first-time visitor becomes a weekly subscriber automatically. This is the primary lead gen mechanism — 100% of users who complete the form become subscribers." },
+        { label: "What You're Replacing", value: "The existing n8n workflow. Use it as reference for flow logic only — you're rebuilding the entire backend pipeline as custom code." },
+      ]
+    },
+    {
+      title: "User Flow (First Visit)",
+      content: [
+        { label: "Step 0: Landing Page", value: "/ai-marketing-tools/content-spark/ — Topic input (2-100 chars) + Email (required). Submit triggers signal scanning AND creates subscriber row. User is auto-enrolled for weekly delivery from this moment." },
+        { label: "Step 1: Processing", value: "Show animated processing state while backend scrapes signals. 3-5 seconds. Backend simultaneously: creates subscriber record with email + topic." },
+        { label: "Step 2: Pick Angle (Step 1 of 3)", value: "Display 10 ranked angles detected from signals. User picks one. Step indicator shows progress (1 active, 2-3 dimmed). CTA: 'Set Your Brief →'." },
+        { label: "Step 3: Set Brief (Step 2 of 3)", value: "Four fields: Angle (pre-filled from selection), Audience, Tone, Goal. All editable. Back button returns to angle picker. CTA: 'Generate My Posts →'." },
+        { label: "Step 4: Content Calendar (Step 3 of 3)", value: "Full report: editable brief summary, interactive posting schedule, editable X posts (3-col grid), editable LinkedIn posts, collapsible repurpose map. Citation Score CTA cross-sell. Footer with 'Change Topic / Change Angle / Edit Brief' buttons to navigate back to any step." },
+      ]
+    },
+    {
+      title: "User Flow (Returning Visit)",
+      content: [
+        { label: "localStorage Auto-Fill", value: "On every session, save to localStorage: { email, topic, brief: { audience, tone, goal } }. On return visit, auto-fill the topic + email inputs and brief fields. User skips straight to angle selection with one click." },
+        { label: "What Gets Saved", value: "Email, topic string, audience, tone, goal. NOT the angle — that changes weekly based on fresh signals. NOT the posts — those regenerate each time." },
+        { label: "Subscriber Update", value: "If a returning user changes their topic or brief and regenerates, the subscriber row is updated with the new preferences. Next week's automated delivery uses the updated inputs." },
+        { label: "Clear / Reset", value: "Small 'Start fresh' link on the landing page if localStorage has saved data. Clears stored inputs and shows blank form. Does NOT delete the subscriber row — they stay enrolled." },
+      ]
+    },
+    {
+      title: "Weekly Delivery (Auto-Enrolled)",
+      content: [
+        { label: "Auto-Enrollment", value: "Every user who submits the landing form is automatically enrolled for weekly delivery. No separate opt-in, no checkbox, no confirmation step. The email they entered IS the subscription." },
+        { label: "Brief Capture", value: "After the user completes Step 3 (Brief), save their brief (audience, tone, goal) to the subscriber row. This completes the data needed for automated weekly runs. If user never reaches the brief step, weekly runs use default brief values." },
+        { label: "Weekly Delivery", value: "Every Monday at 6 AM: scan signals for subscriber's topic → auto-pick strongest angle → generate content using their saved brief → email rendered calendar with 'View Full Report' magic link." },
+        { label: "Magic Link", value: "Email links to /content-spark/report/{unique_id} — pre-rendered report page. No login needed. Link expires after 30 days." },
+        { label: "Change Angle", value: "Email includes 'Not this angle? See 4 others →' link. Opens the tool at Step 2 (angle picker) with their topic + brief pre-loaded from the subscriber record. Picking a new angle regenerates the report." },
+        { label: "Update Preferences", value: "Email footer: 'Update your topic or brief →' link. Opens the tool at Step 0 with all fields pre-filled from subscriber record. Changes save back to the subscriber row for future weeks." },
+        { label: "Unsubscribe", value: "One-click unsubscribe link in email footer. Sets subscriber row to inactive. localStorage on their device is unaffected — they can still use the tool manually." },
+      ]
+    },
+    {
+      title: "Content Calendar Output",
+      subsections: [
+        {
+          name: "Header + Brief",
+          items: [
+            "H1: 'This Week's Content Calendar' — not the topic or angle (brief handles that)",
+            "Export button: downloads .txt with schedule + all posts + repurpose map (reflects any user edits)",
+            "Read-only brief summary: 2x2 grid showing Angle, Audience, Tone, Goal",
+          ]
+        },
+        {
+          name: "Interactive Posting Schedule",
+          items: [
+            "7-day calendar strip (Mon-Sun) with post badges showing type + number (e.g. '𝕏 1', 'in 2')",
+            "Click a post badge to select it → click another day to move it. Visual: selected post scales + borders, target days show dashed teal border + 'Drop here'",
+            "Schedule changes update day labels on X and LinkedIn post cards in real-time",
+            "Heavy days (2+ posts) get teal gradient header. Empty days show dashed border + em dash",
+            "Default: 6 X posts + 2 LinkedIn posts across 5 active days, Saturday rest",
+          ]
+        },
+        {
+          name: "X Posts (6, editable)",
+          items: [
+            "3-column grid. Each card: numbered badge + day label, post text, hashtags, character counter (XXX/280, red if over)",
+            "Edit button on each card → inline textarea for text + input for hashtags. Save/Cancel. Teal border while editing",
+            "Copy button copies full text + hashtags to clipboard",
+            "Edits persist in React state — reflected in export and repurpose map previews",
+          ]
+        },
+        {
+          name: "LinkedIn Posts (2, editable)",
+          items: [
+            "Full-width cards. Each: numbered badge + day label + format tag, title, hook (italic preview), expandable body + CTA",
+            "Edit button auto-expands card, shows labeled fields: Title, Hook, Body, CTA. Each independently editable",
+            "Copy button copies hook + body + CTA to clipboard",
+          ]
+        },
+        {
+          name: "Repurpose Map (collapsible)",
+          items: [
+            "Single collapsible accordion: '🔁 Repurpose Map — X ideas from Y posts'",
+            "Inside: one sub-accordion per source post (e.g. 'X Post 1', 'LinkedIn 2'). Each individually expandable",
+            "Each repurpose idea: channel icon + name, effort badge (~20 min), description",
+            "Previews update live when source posts are edited (reads from React state)",
+          ]
+        },
+        {
+          name: "Citation Score CTA",
+          items: [
+            "Teal gradient card positioned after repurpose map",
+            "Copy: 'Creating content is half the battle' — drives to AI Citation Score tool",
+            "Links to VisibilityStack's citation checking tool as natural cross-sell",
+          ]
+        },
+        {
+          name: "Edit Footer",
+          items: [
+            "'Want different results? Change your topic, angle, or brief.' with three action buttons",
+            "Change Topic → navigates back to Step 0 (landing page, fresh scan)",
+            "Change Angle → navigates back to Step 2 (angle picker, keeps brief)",
+            "Edit Brief → navigates back to Step 3 (brief editor, keeps angle selection)",
+            "All navigation preserves previously entered data where possible",
+          ]
+        },
+      ]
+    },
+    {
+      title: "Technical Pipeline",
+      subsections: [
+        {
+          name: "A. Input Handling + Auto-Enrollment",
+          items: [
+            "Landing page POST: { topic, email }. Both required.",
+            "Look up email in Subscribers table — if not found, create new row with topic + email + status: active",
+            "If found, update topic if changed. Preserve existing brief if present.",
+            "Save topic + email to localStorage for return visit auto-fill",
+            "Trigger signal scanning → proceed to B",
+          ]
+        },
+        {
+          name: "B. Signal Scanning",
+          items: [
+            "X: Apify Twitter Scraper — no cap (~1,000) — sort by likes+retweets — keep top 20",
+            "YouTube: Apify YouTube Scraper — 25 cap — sort by views — keep top 10",
+            "YouTube Transcripts: Apify Transcript — top 5 video URLs only",
+            "Reddit: Apify Reddit Scraper — 50 cap — sort by upvotes — keep top 10",
+            "AI ranks and clusters results into 10 distinct angles with signal strength scores",
+          ]
+        },
+        {
+          name: "C. Content Generation (after user picks angle + sets brief)",
+          items: [
+            "Input: chosen angle + brief (audience, tone, goal) + raw signal data",
+            "Generate 6 X posts: hook-driven, under 280 chars with hashtags, each targeting a different facet of the angle",
+            "Generate 2 LinkedIn posts: 300-500 words, title + hook + body + CTA, practitioner voice",
+            "Generate posting schedule: distribute across 7 days with rest day logic",
+            "Generate repurpose map: 2-4 derivative ideas per source post, each with channel + description + effort estimate",
+            "All content references actual data points from scanned signals — not generic takes",
+          ]
+        },
+        {
+          name: "D. Report Rendering",
+          items: [
+            "Render content calendar as interactive page on VisibilityStack site",
+            "All post content editable in-browser (React state, no backend round-trips for edits)",
+            "Schedule movable in-browser (click-to-move, no backend needed)",
+            "Export function generates .txt from current state (includes any user edits)",
+          ]
+        },
+        {
+          name: "E. Brief Save + HubSpot Sync (after user completes Step 3)",
+          items: [
+            "After user submits brief: UPDATE subscriber row with audience, tone, goal fields",
+            "This completes the subscriber profile — all future weekly runs use this brief",
+            "HubSpot sync: create/update contact — Lead Source = ContentSpark, Topic, Brief summary, Subscriber = true",
+            "If user changes brief on a return visit, update both subscriber row and HubSpot",
+          ]
+        },
+        {
+          name: "F. Weekly Automation (cron job, every Monday 6 AM)",
+          items: [
+            "For each active subscriber: run Steps B + C using stored topic + brief",
+            "Auto-pick top-ranked angle (highest signal strength)",
+            "Render report at unique URL (/content-spark/report/{id})",
+            "Send email: teaser + 'View Calendar' link + 'Not this angle?' link + 'Update preferences' link + unsubscribe",
+          ]
+        },
+      ]
+    },
+    {
+      title: "Data Model",
+      content: [
+        { label: "Subscribers Table", value: "email (PK), topic (text), audience (text, nullable — filled after brief step), tone (text, nullable), goal (text, nullable), cadence (json — platforms, post counts, rest days), created_at, brief_completed_at (nullable), last_sent_at, hubspot_contact_id, active (boolean, default true)" },
+        { label: "Reports Table", value: "report_id (PK), subscriber_email (FK), topic, angle, brief_json, posts_json, schedule_json, repurpose_json, created_at, expires_at" },
+        { label: "No Users Table", value: "No accounts, no passwords, no sessions. Subscribers are created at form submit (Step 0). Brief fields are nullable until the user completes Step 3. Weekly automation only runs for subscribers where brief_completed_at is not null." },
+      ]
+    },
+    {
+      title: "Tool Stack",
+      content: [
+        { label: "Database", value: "PostgreSQL — tables: Subscribers, Reports" },
+        { label: "Backend", value: "Python + FastAPI. Custom code replacing n8n workflow." },
+        { label: "Scraping", value: "Apify actors: Twitter Scraper ($0.15/1K), YouTube Scraper ($5/1K), YouTube Transcript ($10/1K), Reddit Scraper ($1.49/1K)" },
+        { label: "AI / LLM", value: "GPT-4 via OpenRouter for signal ranking + content generation" },
+        { label: "Client State", value: "localStorage for email + topic + brief auto-fill on return visits. React useState for in-session edits (posts, schedule). Brief saved server-side to subscriber row on completion." },
+        { label: "CRM", value: "HubSpot — subscriber sync, lead tracking" },
+        { label: "Email", value: "Transactional: confirmation + weekly delivery. Build: template rendering, magic link generation, unsubscribe handling." },
+        { label: "Scheduler", value: "Cron job (or equivalent) for Monday 6 AM weekly runs" },
+        { label: "Est. Cost Per Run", value: "~$0.40 scraping + LLM variable. Same cost whether first visit or weekly subscriber run." },
+      ]
+    },
+    {
+      title: "Error Handling",
+      content: [
+        { label: "One platform scrape fails", value: "Continue with remaining platforms. Fewer signals, but still generate angles from what's available." },
+        { label: "No signals found", value: "Show message: 'No trending signals detected for this topic. Try broadening your topic or check back next week.' No report generated." },
+        { label: "AI generation fails", value: "Retry once. Still fails → show raw signals without generated posts. User can still see what's trending." },
+        { label: "localStorage unavailable", value: "Tool works normally — just no auto-fill on return. Private browsing mode falls back to blank form." },
+        { label: "Email delivery fails", value: "Log failure. Retry after 15 min. Report page still exists at its URL." },
+        { label: "Subscriber run fails", value: "Skip this subscriber for the week. Send apology email: 'We couldn't generate your calendar this week. We'll try again next Monday.'" },
+      ]
+    },
+    {
+      title: "Scope Boundaries",
+      content: [
+        { label: "Phase 1 (Build Now)", value: "Full 3-step flow (Topic + Email → Angle → Brief → Calendar). Auto-enrollment on form submit. Editable posts + interactive schedule + repurpose map. localStorage auto-fill for returning users. Export .txt. Citation Score CTA cross-sell. Footer navigation to change topic/angle/brief. Brief save to subscriber row. HubSpot sync. ~$0.40/run." },
+        { label: "Phase 2", value: "Weekly Monday automation: cron job scanning signals for all active subscribers, auto-generating calendars, email delivery with magic links. 'Not this angle?' flow. 'Update preferences' links. Unsubscribe handling." },
+        { label: "Phase 3", value: "Cadence customization (choose platforms, post counts, rest days). Multiple topic profiles per subscriber. Performance feedback loop (which angles got engagement). Evergreen intent (long-form article outlines)." },
+        { label: "Not Your Scope", value: "Landing page frontend design (handled separately). Email copy (marketing provides). CRM workflow automation beyond basic sync. Prototype UI polish." },
+      ]
+    },
+  ];
+
+  return (
+    <div style={{ maxWidth: 820, margin: "0 auto", padding: "40px 24px 80px" }}>
+      {/* PRD Header */}
+      <div style={{ marginBottom: 32 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
+          <span style={{ fontSize: 10, fontWeight: 700, color: C.primary, fontFamily: "'DM Mono', monospace", letterSpacing: 1, padding: "3px 8px", background: C.primaryDim, borderRadius: 4 }}>PRD</span>
+          <span style={{ fontSize: 10, fontWeight: 700, color: C.textMuted, fontFamily: "'DM Mono', monospace", letterSpacing: 1 }}>v1.0 — INTERNAL</span>
+        </div>
+        <h1 style={{ fontSize: 24, fontWeight: 800, color: C.text, margin: "0 0 4px", lineHeight: 1.3 }}>ContentSpark — Build Spec</h1>
+        <p style={{ fontSize: 14, color: C.textSecondary, lineHeight: 1.6, margin: 0 }}>Free weekly content calendar tool. 3-step generation flow, editable output, email subscription for automated weekly delivery.</p>
+      </div>
+
+      {/* Sections */}
+      <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+        {sections.map((sec, si) => {
+          const isOpen = expandedSection === si;
+          return (
+            <div key={si} style={{ background: C.surface, border: "1px solid " + (isOpen ? "rgba(0,146,148,0.25)" : C.border), borderRadius: 12, overflow: "hidden", transition: "border-color 0.2s" }}>
+              <button onClick={() => setExpandedSection(isOpen ? -1 : si)} style={{
+                display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%",
+                padding: "14px 20px", background: "transparent", border: "none", cursor: "pointer",
+              }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <span style={{ fontSize: 11, fontWeight: 700, color: isOpen ? C.primary : C.textMuted, fontFamily: "'DM Mono', monospace", width: 20 }}>{String(si + 1).padStart(2, "0")}</span>
+                  <span style={{ fontSize: 14, fontWeight: 700, color: C.text }}>{sec.title}</span>
+                </div>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={isOpen ? C.primary : C.textMuted} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+                  style={{ transform: isOpen ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.2s" }}>
+                  <polyline points="6 9 12 15 18 9"/>
+                </svg>
+              </button>
+
+              {isOpen && (
+                <div style={{ padding: "0 20px 18px 50px", animation: "fadeUp 0.15s ease" }}>
+                  {/* Key-value content */}
+                  {sec.content && sec.content.map((item, ii) => (
+                    <div key={ii} style={{ marginBottom: ii < sec.content.length - 1 ? 14 : 0 }}>
+                      <div style={{ fontSize: 10, fontWeight: 700, color: C.primary, fontFamily: "'DM Mono', monospace", letterSpacing: 0.5, marginBottom: 3 }}>{item.label}</div>
+                      <div style={{ fontSize: 13, color: C.text, lineHeight: 1.65 }}>{item.value}</div>
+                    </div>
+                  ))}
+
+                  {/* Subsections with bullet lists */}
+                  {sec.subsections && sec.subsections.map((sub, ssi) => (
+                    <div key={ssi} style={{ marginBottom: ssi < sec.subsections.length - 1 ? 18 : 0 }}>
+                      <div style={{ fontSize: 12, fontWeight: 700, color: C.text, marginBottom: 8, paddingBottom: 6, borderBottom: "1px solid " + C.border }}>{sub.name}</div>
+                      <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                        {sub.items.map((item, iii) => (
+                          <div key={iii} style={{ display: "flex", gap: 8, alignItems: "flex-start" }}>
+                            <div style={{ width: 5, height: 5, borderRadius: "50%", background: C.primary, marginTop: 6, flexShrink: 0 }} />
+                            <div style={{ fontSize: 13, color: C.text, lineHeight: 1.6 }}>{item}</div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
+
+/* ─── EMAIL PREVIEW SCREEN ─── */
+const EmailPreviewScreen = ({ jobData, selectedAngleIds, onNavigate }) => {
+  const allTopicResults = (jobData && jobData.result && jobData.result.results) || [];
+  const angles = allTopicResults.flatMap(r => (r.angles || []).map(a => ({ ...a, _topic: r.topic })));
+  const selectedAngles = (selectedAngleIds && selectedAngleIds.length > 0)
+    ? angles.filter(a => selectedAngleIds.includes(a.id))
+    : angles.slice(0, 1);
+  const generatedPosts = allTopicResults.reduce((acc, r) => Object.assign(acc, r.generated_posts || {}), {});
+
+  // Pull first x post per angle for the preview
+  const previewPosts = selectedAngles.map(angle => {
+    const posts = generatedPosts[angle.id] || {};
+    const xPosts = (posts.x_posts || []);
+    return { angle, post: xPosts[0] || null };
+  }).filter(p => p.post);
+
+  const today = new Date();
+  const weekLabel = today.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
+  const topic = allTopicResults[0] ? allTopicResults[0].topic : "your topic";
+
+  // Dynamic stats — sum actual generated content across all selected angles
+  const totalXPosts = selectedAngles.reduce((sum, a) => sum + ((generatedPosts[a.id] || {}).x_posts || []).length, 0);
+  const totalLinkedIn = selectedAngles.reduce((sum, a) => sum + ((generatedPosts[a.id] || {}).linkedin_posts || []).length, 0);
+  const totalArticles = selectedAngles.reduce((sum, a) => sum + ((generatedPosts[a.id] || {}).article_ideas || []).length, 0);
+
+  return (
+    <div style={{ maxWidth: 680, margin: "0 auto", padding: "40px 20px 80px" }}>
+      {/* Page header */}
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 28 }}>
+        <div>
+          <div style={{ fontSize: 11, fontWeight: 700, color: C.textMuted, fontFamily: "'DM Mono', monospace", letterSpacing: 0.5, marginBottom: 4 }}>EMAIL PREVIEW</div>
+          <h1 style={{ fontSize: 22, fontWeight: 800, color: C.text, margin: 0, fontFamily: "'Manrope', sans-serif" }}>Weekly Delivery Email</h1>
+          <p style={{ fontSize: 13, color: C.textMuted, margin: "4px 0 0" }}>This is what lands in your subscriber's inbox every Monday.</p>
+        </div>
+        <button onClick={() => onNavigate && onNavigate(4)} style={{
+          display: "inline-flex", alignItems: "center", gap: 6,
+          padding: "8px 16px", fontSize: 12, fontWeight: 600, borderRadius: 999,
+          background: C.surface, border: "1px solid " + C.border, color: C.textSecondary,
+          cursor: "pointer", fontFamily: "'Manrope', sans-serif",
+        }}>
+          ← Back to Calendar
+        </button>
+      </div>
+
+      {/* Email envelope chrome */}
+      <div style={{ background: C.surface, border: "1px solid " + C.border, borderRadius: 16, overflow: "hidden", boxShadow: "0 4px 24px rgba(0,0,0,0.06)" }}>
+
+        {/* Email client chrome bar */}
+        <div style={{ background: C.surfaceLight, borderBottom: "1px solid " + C.border, padding: "12px 20px", display: "flex", flexDirection: "column", gap: 4 }}>
+          {[
+            { label: "From", value: "ContentSpark by VisibilityStack <hello@visibilitystack.com>" },
+            { label: "To", value: "you@yourcompany.com" },
+            { label: "Subject", value: `🗓 Your Content Calendar for the Week of ${weekLabel}` },
+          ].map(row => (
+            <div key={row.label} style={{ display: "flex", gap: 8, fontSize: 12, fontFamily: "'DM Mono', monospace" }}>
+              <span style={{ color: C.textMuted, minWidth: 52 }}>{row.label}</span>
+              <span style={{ color: C.text, fontWeight: 500 }}>{row.value}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* Email body */}
+        <div style={{ padding: "0 0 32px" }}>
+
+          {/* Header banner */}
+          <div style={{ background: "linear-gradient(135deg, #009294 0%, #00b0b3 100%)", padding: "36px 40px 32px", textAlign: "center" }}>
+            <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 2, color: "rgba(255,255,255,0.7)", marginBottom: 10, fontFamily: "'DM Mono', monospace" }}>VISIBILITYSTACK</div>
+            <div style={{ fontSize: 26, fontWeight: 800, color: "#fff", lineHeight: 1.2, fontFamily: "'Manrope', sans-serif", marginBottom: 8 }}>
+              Your Weekly Content Calendar is Ready
+            </div>
+            <div style={{ fontSize: 14, color: "rgba(255,255,255,0.82)", lineHeight: 1.6 }}>
+              {weekLabel} · Topic: <strong style={{ color: "#fff" }}>{topic}</strong>
+            </div>
+          </div>
+
+          <div style={{ padding: "28px 36px 0" }}>
+
+            {/* Greeting */}
+            <p style={{ fontSize: 15, color: C.text, lineHeight: 1.7, marginBottom: 20 }}>
+              Hi there,
+            </p>
+            <p style={{ fontSize: 15, color: C.text, lineHeight: 1.7, marginBottom: 20 }}>
+              We scanned what's performing across Reddit, X, and search communities this week for <strong>{topic}</strong> and built your content plan around the strongest signal we found.
+            </p>
+            <p style={{ fontSize: 15, color: C.text, lineHeight: 1.7, marginBottom: 28 }}>
+              Here's a preview of what's inside your calendar this week:
+            </p>
+
+            {/* Stats row */}
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10, marginBottom: 28 }}>
+              {[
+                { icon: "𝕏", label: "X Posts", count: totalXPosts, color: C.twitter, dim: C.twitterDim },
+                { icon: "in", label: "LinkedIn Posts", count: totalLinkedIn, color: C.linkedin, dim: C.linkedinDim },
+                { icon: "📝", label: "Article Ideas", count: totalArticles, color: C.primary, dim: C.primaryDim },
+              ].map((s, i) => (
+                <div key={i} style={{ background: s.dim, borderRadius: 10, padding: "14px 16px", textAlign: "center" }}>
+                  <div style={{ fontSize: 13, fontWeight: 800, color: s.color, fontFamily: "'DM Mono', monospace", marginBottom: 2 }}>{s.icon}</div>
+                  <div style={{ fontSize: 22, fontWeight: 800, color: C.text, fontFamily: "'Manrope', sans-serif" }}>{s.count}</div>
+                  <div style={{ fontSize: 10, color: C.textMuted, fontWeight: 600, fontFamily: "'DM Mono', monospace", letterSpacing: 0.3, marginTop: 2 }}>{s.label}</div>
+                </div>
+              ))}
+            </div>
+
+            {/* This week's angle(s) */}
+            <div style={{ marginBottom: 28 }}>
+              <div style={{ fontSize: 11, fontWeight: 700, color: C.textMuted, fontFamily: "'DM Mono', monospace", letterSpacing: 0.5, marginBottom: 12 }}>THIS WEEK'S ANGLE{selectedAngles.length > 1 ? "S" : ""}</div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                {selectedAngles.length > 0 ? selectedAngles.map((angle, i) => (
+                  <div key={angle.id} style={{ background: C.primaryDim, border: "1px solid rgba(0,146,148,0.2)", borderRadius: 10, padding: "14px 16px", display: "flex", gap: 12, alignItems: "flex-start" }}>
+                    <div style={{ width: 24, height: 24, borderRadius: 6, background: C.primary, color: "#fff", fontSize: 10, fontWeight: 800, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, fontFamily: "'DM Mono', monospace" }}>{i + 1}</div>
+                    <div>
+                      {angle._topic && <div style={{ fontSize: 9, fontWeight: 700, color: C.primary, fontFamily: "'DM Mono', monospace", letterSpacing: 0.3, marginBottom: 4 }}>{angle._topic.toUpperCase()}</div>}
+                      <div style={{ fontSize: 14, fontWeight: 700, color: C.text, lineHeight: 1.4 }}>{angle.angle}</div>
+                      {angle.why && <div style={{ fontSize: 12, color: C.textSecondary, lineHeight: 1.5, marginTop: 4 }}>{angle.why}</div>}
+                    </div>
+                  </div>
+                )) : (
+                  <div style={{ background: C.primaryDim, border: "1px solid rgba(0,146,148,0.2)", borderRadius: 10, padding: "14px 16px" }}>
+                    <div style={{ fontSize: 14, fontWeight: 700, color: C.text }}>Why Your Content Gets Zero AI Mentions (And How to Fix It)</div>
+                    <div style={{ fontSize: 12, color: C.textSecondary, marginTop: 4 }}>Most teams publish constantly but never structure content for AI retrieval. This angle shows the exact fixes that move the needle.</div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Sample X post preview */}
+            {previewPosts.length > 0 && (
+              <div style={{ marginBottom: 28 }}>
+                <div style={{ fontSize: 11, fontWeight: 700, color: C.textMuted, fontFamily: "'DM Mono', monospace", letterSpacing: 0.5, marginBottom: 12 }}>SAMPLE X POST FROM THIS WEEK</div>
+                <div style={{ background: C.twitterDim, border: "1px solid rgba(0,0,0,0.08)", borderRadius: 12, padding: "16px 18px" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
+                    <div style={{ width: 32, height: 32, borderRadius: "50%", background: "linear-gradient(135deg, #009294, #00b0b3)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                      <span style={{ fontSize: 14, color: "#fff", fontWeight: 800 }}>V</span>
+                    </div>
+                    <div>
+                      <div style={{ fontSize: 13, fontWeight: 700, color: C.text }}>VisibilityStack</div>
+                      <div style={{ fontSize: 11, color: C.textMuted }}>@visibilitystack</div>
+                    </div>
+                  </div>
+                  <p style={{ fontSize: 14, color: C.text, lineHeight: 1.65, margin: 0 }}>{previewPosts[0].post.content}</p>
+                </div>
+              </div>
+            )}
+
+            {/* CTA */}
+            <div style={{ textAlign: "center", marginBottom: 28 }}>
+              <div style={{ fontSize: 14, color: C.textSecondary, lineHeight: 1.6, marginBottom: 16 }}>
+                Your full calendar has {totalXPosts} X {totalXPosts === 1 ? "post" : "posts"}, {totalLinkedIn} LinkedIn {totalLinkedIn === 1 ? "post" : "posts"}, and {totalArticles} article {totalArticles === 1 ? "idea" : "ideas"} — all editable in one click.
+              </div>
+              <a href="#" style={{
+                display: "inline-block", padding: "14px 36px", fontSize: 15, fontWeight: 700,
+                background: "linear-gradient(135deg, #009294, #00b0b3)", color: "#fff",
+                borderRadius: 10, textDecoration: "none", fontFamily: "'Manrope', sans-serif",
+                boxShadow: "0 4px 18px rgba(0,146,148,0.3)",
+              }}>
+                View My Full Content Calendar →
+              </a>
+            </div>
+
+            {/* Divider */}
+            <div style={{ borderTop: "1px solid " + C.border, margin: "4px 0 20px" }} />
+
+            {/* Tip of the week */}
+            <div style={{ background: C.surfaceLight, borderRadius: 10, padding: "16px 18px", marginBottom: 24 }}>
+              <div style={{ fontSize: 10, fontWeight: 700, color: C.primary, fontFamily: "'DM Mono', monospace", letterSpacing: 0.5, marginBottom: 6 }}>💡 TIP OF THE WEEK</div>
+              <p style={{ fontSize: 13, color: C.textSecondary, lineHeight: 1.65, margin: 0 }}>
+                Post your strongest X post on Tuesday or Wednesday morning. Those days consistently see the highest engagement windows for B2B audiences. Schedule it the night before using your favourite tool.
+              </p>
+            </div>
+
+            {/* Footer */}
+            <div style={{ textAlign: "center" }}>
+              <div style={{ fontSize: 12, color: C.textMuted, lineHeight: 1.7 }}>
+                You're receiving this because you signed up for weekly content calendars from VisibilityStack.<br />
+                <a href="#" style={{ color: C.primary, textDecoration: "none" }}>Unsubscribe</a> &nbsp;·&nbsp;
+                <a href="#" style={{ color: C.primary, textDecoration: "none" }}>Update preferences</a> &nbsp;·&nbsp;
+                <a href="#" style={{ color: C.primary, textDecoration: "none" }}>View in browser</a>
+              </div>
+              <div style={{ fontSize: 11, color: C.textMuted, marginTop: 10 }}>
+                © {new Date().getFullYear()} VisibilityStack · London, UK
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+/* ─── PROTOTYPE CONTROLS (fixed bottom-right) ─── */
+const ScreenToggle = ({ screen, setScreen }) => {
+  const [collapsed, setCollapsed] = useState(false);
+  const screens = [
+    { label: "Landing Page", idx: 0 },
+    { label: "Processing", idx: 1 },
+    { label: "Pick Angle", idx: 2 },
+    { label: "Content Calendar", idx: 4 },
+    { label: "Email Preview", idx: 6 },
+    { label: "PRD", idx: 5 },
+  ];
+
+  return (
+    <div style={{
+      position: "fixed", bottom: 24, right: 24, zIndex: 999,
+      background: "#fff", border: "1px solid " + C.border, borderRadius: 12,
+      boxShadow: "0 4px 24px rgba(0,0,0,0.1), 0 1px 4px rgba(0,0,0,0.06)",
+      width: collapsed ? "auto" : 380, overflow: "hidden", transition: "width 0.2s",
+    }}>
+      {/* Header */}
+      <button onClick={() => setCollapsed(!collapsed)} style={{
+        display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%",
+        padding: "10px 14px", background: "transparent", border: "none", borderBottom: collapsed ? "none" : "1px solid " + C.border,
+        cursor: "pointer",
+      }}>
+        <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.08em", color: C.textMuted, fontFamily: "'DM Mono', monospace" }}>PROTOTYPE CONTROLS</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={C.textMuted} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+          style={{ transform: collapsed ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.2s" }}>
+          <polyline points="6 9 12 15 18 9"/>
+        </svg>
+      </button>
+
+      {/* Pills */}
+      {!collapsed && (
+        <div style={{ padding: "10px 14px 12px" }}>
+          <div style={{ fontSize: 11, fontWeight: 600, color: C.text, marginBottom: 8 }}>View</div>
+          <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+            {screens.map((s) => {
+              const active = screen === s.idx;
+              return (
+                <button key={s.label} onClick={() => setScreen(s.idx)} style={{
+                  padding: "6px 14px", fontSize: 11, fontWeight: 600, cursor: "pointer",
+                  background: "transparent",
+                  color: active ? C.primary : C.textMuted,
+                  border: active ? "1.5px solid " + C.primary : "1.5px solid " + C.border,
+                  borderRadius: 999, transition: "all 0.15s", fontFamily: "'Manrope', sans-serif",
+                  whiteSpace: "nowrap",
+                }}
+                  onMouseEnter={e => { if (!active) { e.currentTarget.style.borderColor = C.textMuted; e.currentTarget.style.color = C.text; }}}
+                  onMouseLeave={e => { if (!active) { e.currentTarget.style.borderColor = C.border; e.currentTarget.style.color = C.textMuted; }}}>
+                  {s.label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+/* ─── MAIN APP ─── */
+function ContentSpark() {
+  const [screen, setScreen] = useState(0);
+  const [topics, setTopics] = useState([]);
+  const [email, setEmail] = useState("");
+  const [frequency, setFrequency] = useState(1);
+  const [jobId, setJobId] = useState(null);
+  const [jobData, setJobData] = useState(null);      // from phase 1 polling
+  const [selectedAngleIds, setSelectedAngleIds] = useState([]);
+  const [tone, setTone] = useState("Conversational");
+  const [submitError, setSubmitError] = useState(null);
+  const [submitLoading, setSubmitLoading] = useState(false);
+
+  // Phase 1: create job → go to processing
+  const handleSubmit = async (topicsList, e, freq = 1) => {
+    setSubmitError(null);
+    setSubmitLoading(true);
+    try {
+      const id = await api.createJob(topicsList, e, freq);
+      setJobId(id);
+      setScreen(1);
+    } catch (err) {
+      setSubmitError(err.message || "Could not connect to the server. Make sure the API is running.");
+    } finally {
+      setSubmitLoading(false);
+    }
+  };
+
+  // Phase 1 complete: angles ready
+  const handleAnglesReady = (data) => {
+    setJobData(data);
+    setScreen(2);
+  };
+
+  // Phase 2: submit selected angles
+  const handleProcessAngles = async (angleIds, selectedTone) => {
+    setSelectedAngleIds(angleIds);
+    try {
+      await api.processAngles(jobId, angleIds, selectedTone);
+      setScreen(3);
+    } catch (err) {
+      alert("Failed to start post generation. Please try again.");
+    }
+  };
+
+  // Phase 2 complete: posts ready
+  const handlePostsReady = (data) => {
+    setJobData(data);
+    setScreen(4);
+  };
+
+  return (
+    <div style={{ minHeight: "100vh", background: C.bg, color: C.text, fontFamily: "'Manrope', system-ui, sans-serif" }}>
+
+      {/* NAV */}
+      <nav style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 40px", height: 72, background: "#FFFFFF", borderBottom: "1px solid #f0f0f0", position: "sticky", top: 0, zIndex: 100 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, cursor: "pointer", flexShrink: 0 }} onClick={() => setScreen(0)}>
+          <VSLogoMark size={36} />
+          <div style={{ display: "flex", flexDirection: "column", lineHeight: 1.15 }}>
+            <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", color: C.text }}>VISIBILITY</span>
+            <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", color: C.text }}>STACK</span>
+          </div>
+        </div>
+
+        <div style={{ display: "flex", alignItems: "center", gap: 28 }}>
+          <NavLink label="Platform" hasDropdown />
+          <NavLink label="Embedded Team" />
+          <NavLink label="Results" hasDropdown />
+          <NavLink label="Academy" hasDropdown />
+          <NavLink label="Tools" />
+          <NavLink label="Pricing" />
+          <NavLink label="About" />
+        </div>
+
+        <button style={{ padding: "10px 24px", fontSize: 14, fontWeight: 600, borderRadius: 9999, background: C.primary, color: "#FFFFFF", border: "none", cursor: "pointer", transition: "background 0.15s", flexShrink: 0 }}
+          onMouseEnter={e => e.target.style.background = C.primaryHover}
+          onMouseLeave={e => e.target.style.background = C.primary}>
+          Book a Demo
+        </button>
+      </nav>
+
+      {/* SCREENS */}
+      <div>
+        {screen === 0 && (
+          <LandingScreen
+            topics={topics} setTopics={setTopics}
+            email={email} setEmail={setEmail}
+            frequency={frequency} setFrequency={setFrequency}
+            onSubmit={handleSubmit}
+            loading={submitLoading}
+            error={submitError}
+          />
+        )}
+        {screen === 1 && (
+          <ProcessingScreen jobId={jobId} onComplete={handleAnglesReady} />
+        )}
+        {screen === 2 && (
+          <SignalPickerScreen
+            angles={(jobData && jobData.result && jobData.result.results || []).flatMap(r =>
+              (r.angles || []).map(a => ({ ...a, _topic: r.topic }))
+            )}
+            tone={tone} setTone={setTone}
+            onSubmit={handleProcessAngles}
+            onNavigate={setScreen}
+          />
+        )}
+        {screen === 3 && (
+          <GeneratingPostsScreen jobId={jobId} onComplete={handlePostsReady} />
+        )}
+        {screen === 4 && (
+          <ReportScreen
+            jobData={jobData}
+            selectedAngleIds={selectedAngleIds}
+            onNavigate={setScreen}
+            tone={tone} setTone={setTone}
+            frequency={frequency} setFrequency={setFrequency}
+          />
+        )}
+        {screen === 5 && <PRDScreen />}
+      </div>
+
+      {/* Screen Toggle */}
+      <ScreenToggle screen={screen} setScreen={setScreen} />
+    </div>
+  );
+}
+
+ReactDOM.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.usingClientEntryPoint = true;
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<ContentSpark />);
+</script>
+<script>
+(function() {
+  var src = document.getElementById('jsx-source').textContent;
+  var out = Babel.transform(src, { presets: ['react'] }).code;
+  var s = document.createElement('script');
+  s.textContent = out;
+  document.body.appendChild(s);
+})();
+</script>
+</body>
+</html>
